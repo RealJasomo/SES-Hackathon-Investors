@@ -44,6 +44,9 @@ function App() {
               <Route path="/search/startups">
                 <Pages.StartupSearchPage/>
               </Route>
+              <Route path="/search/investors">
+                <Pages.InvestorSearchPage/>
+              </Route>
             </React.Suspense>
           </Switch>
         </Router>
