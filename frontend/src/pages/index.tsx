@@ -7,6 +7,7 @@ const Pages = {
     HomePage: React.lazy(() => import('./HomePage')),
     ContactPage: React.lazy(() => import('./ContactPage')),
     AboutPage: React.lazy(() => import('./AboutPage')),
+    InvestorSearchPage: React.lazy(() => import('./InvestorSearchPage')),
 }
 
 export default Pages;
