@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import withAuthentication from '@hoc/withAuthentication';
 
 import styles from './HomePage.module.scss';
