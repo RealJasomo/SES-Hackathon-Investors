@@ -1,4 +1,5 @@
 import LoginForm from '@components/LoginForm';
+import SignupInformation from '@components/SignupInformation';
 import { Step, StepLabel, Stepper } from '@material-ui/core';
 import React, { useState } from 'react';
 
@@ -21,7 +22,7 @@ const steps: IStep[] = [{
 }]
 
 export default function SignupPage(){
-    const [step, setStep] = useState<IStep>(steps[0]);
+    const [step, setStep] = useState<IStep>(steps[1]);
     
     return (
         <div className={styles.signupPage}>
@@ -46,7 +47,8 @@ export default function SignupPage(){
                     </div>
                 </div>
                 <div className={styles.signupArea}>
-                    {step.number==1&&<LoginForm signup/>}
+                    {step.number===1&&<LoginForm signup onSignUp={() => setStep(steps[step.number])}/>}
+                    {step.number===2&&<SignupInformation />}
                 </div>
             </div>
         </div>);

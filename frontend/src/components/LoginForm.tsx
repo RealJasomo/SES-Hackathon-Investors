@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ReactComponent as GoogleIcon } from '@res/google.svg';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
 import firebase from '@fire';
 
 import styles from './LoginForm.module.scss';
 import HrWithText from './HrWithText';
 
 interface ILoginFormProps{
-    signup?: boolean
+    signup?: boolean,
+    onSignUp?: () => void;
 }
 
 export default function LoginForm(props: ILoginFormProps){
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<string>('');
+
     const action = props.signup ? 'Up' : 'In';
     const pageType = props.signup ? 'Sign Up' : 'Login'
+
+    const errorHandler = (error: firebase.FirebaseError) => setError(error.message);
+    
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await firebase.auth().signInWithEmailAndPassword(email, password);
+        if(props.signup){
+            await firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(_ => {
+                    setError('');
+                    props.onSignUp?.();
+                })
+                .catch(errorHandler);
+        }else{
+            await firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(() => setError(''))
+                .catch(errorHandler);
+        }
     }
     
     const handleTextChange = (updator: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -28,6 +46,9 @@ export default function LoginForm(props: ILoginFormProps){
     const handleGooglelogin = async () => {
         var provider: firebase.auth.GoogleAuthProvider = new firebase.auth.GoogleAuthProvider();
         await firebase.auth().signInWithPopup(provider);
+        if(props.signup && props.onSignUp){
+            props.onSignUp();
+        }
     }
 
     return (
@@ -41,6 +62,7 @@ export default function LoginForm(props: ILoginFormProps){
                         <p>Sign {action} with Google</p>
                     </button>
                     <HrWithText text={`or Sign ${action} with Email`}/>
+                    {error&&<p className={styles.error}>{error}</p>}
                     <div>
                         <p className={styles.fieldLabel}>Email*</p>
                         <TextField value={email} onChange={handleTextChange(setEmail)} placeholder="email@email.com" variant="outlined" fullWidth required/>
