@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import LoginForm from '@components/LoginForm';
 import SignupInformation from '@components/SignupInformation';
 import { Step, StepLabel, Stepper } from '@material-ui/core';
-import withAuthentication from '@hoc/withAuthentication';
-
+ 
 import { ReactComponent as Logo } from '@res/launchpad.svg';
 import styles from './SignupPage.module.scss';
 
@@ -23,7 +22,7 @@ const steps: IStep[] = [{
     description: 'Enter your information'
 }]
 
-function SignupPage(){
+export default function SignupPage(){
     const [step, setStep] = useState<IStep>(steps[0]);
     
     return (
@@ -55,5 +54,3 @@ function SignupPage(){
             </div>
         </div>);
 }
-
-export default withAuthentication(SignupPage, '/dashboard', true);
