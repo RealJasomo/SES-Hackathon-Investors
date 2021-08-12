@@ -36,7 +36,7 @@ export default function SignupInformation(){
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await usersRef.add({
+        await usersRef.doc(authContext.user?.uid ?? '').set({
             firstName,
             lastName,
             state,
@@ -44,8 +44,7 @@ export default function SignupInformation(){
             bio,
             profilePhoto: avatar,
             email: authContext.user?.email ?? '',
-            userId: authContext.user?.uid ?? ''
-        });
+        }, { merge: true});
     }
 
     
