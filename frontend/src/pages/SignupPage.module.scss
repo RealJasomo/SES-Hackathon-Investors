@@ -1,7 +1,8 @@
-@use './registration.scss' as *;
+@use './page' as *;
 
 .signupPage {
   @include page;
+  @include flexCenter;
   .signupCard {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -19,6 +20,13 @@
       .brand {
         h1 {
           font-size: 1.25em;
+        }
+        .logo {
+          height: 3rem;
+          width: auto;
+          path {
+            fill: #fff;
+          }
         }
       }
       .steps {

@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '@fire';
 import countriesList from '../res/countries.json';
+import { useContext } from 'react';
+import { AuthenticationContext } from '@contexts/AuthContext';
 
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
 
+    const authContext = useContext(AuthenticationContext);
+    const user = authContext.user; // user profile
+
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
-   
+    
     const defaultCountry = {code: "", name: "", states: []}; // default country selection
     const [country, setCountry] = useState(defaultCountry); // country location
 
@@ -25,6 +30,7 @@ function StartupSearchPage() {
     useEffect(() => {
         let arr: firebase.firestore.DocumentData[] = []; // temp array
         
+
         db.collection("startups").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 startups stored in database
             snapshot.forEach((doc) => {
                 if (doc.exists) { 

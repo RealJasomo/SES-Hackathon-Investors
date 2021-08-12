@@ -6,9 +6,10 @@ import {
   Route,
  } from 'react-router-dom';
 import Pages from '@pages';
+import UnauthedNav from '@components/UnauthedNav';
+import CountryProvider from '@contexts/CountryContext';
 
 import './App.scss';
-import CountryProvider from '@contexts/CountryContext';
 
 function App() {
   return (
@@ -19,9 +20,20 @@ function App() {
           <Switch>
             <Route exact path="/"></Route>
             <React.Suspense fallback={<div>loading...</div>}>
-              <Route exact path="/"></Route>
+              <Route exact path={['/', '/contact', '/about']}>
+                <UnauthedNav/>
+              </Route>
+              <Route exact path="/">
+                <Pages.HomePage />
+              </Route>
+              <Route path="/contact">
+                <Pages.ContactPage />
+              </Route>
+              <Route path="/about">
+                <Pages.AboutPage />
+              </Route>
               <Route path="/login">
-                <Pages.LoginPage/>
+                <Pages.LoginPage />
               </Route>
               <Route path="/signup">
                 <Pages.SignupPage />
