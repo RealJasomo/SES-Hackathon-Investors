@@ -1,8 +1,10 @@
+import React, { useState } from 'react';
 import LoginForm from '@components/LoginForm';
 import SignupInformation from '@components/SignupInformation';
 import { Step, StepLabel, Stepper } from '@material-ui/core';
-import React, { useState } from 'react';
+import withAuthentication from '@hoc/withAuthentication';
 
+import { ReactComponent as Logo } from '@res/launchpad.svg';
 import styles from './SignupPage.module.scss';
 
 interface IStep {
@@ -21,7 +23,7 @@ const steps: IStep[] = [{
     description: 'Enter your information'
 }]
 
-export default function SignupPage(){
+function SignupPage(){
     const [step, setStep] = useState<IStep>(steps[0]);
     
     return (
@@ -29,7 +31,7 @@ export default function SignupPage(){
             <div className={styles.signupCard}>
                 <div className={styles.signupProgress}>
                     <div className={styles.brand}>
-                        <h1>LaunchPad</h1>
+                        <Logo className={styles.logo}/>
                     </div>
                     <div className={styles.steps}>
                         <h1>Step {step.number}</h1>
@@ -53,3 +55,5 @@ export default function SignupPage(){
             </div>
         </div>);
 }
+
+export default withAuthentication(SignupPage, '/dashboard', true);

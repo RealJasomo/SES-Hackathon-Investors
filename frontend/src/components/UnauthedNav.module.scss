@@ -1,0 +1,29 @@
+$primary: #150bd4;
+
+.unAuthenticatedNav {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  max-height: 2rem;
+  background-color: #b0b5f8;
+  .logo {
+    margin-right: auto;
+    height: 2rem;
+    width: auto;
+  }
+  p {
+    margin-inline: 1rem;
+    cursor: pointer;
+    &:hover {
+      color: #d8d8d8;
+    }
+  }
+  button {
+    margin-inline: 1rem;
+    padding: 0.25rem;
+    color: #ffffff;
+    background-color: $primary;
+    border-radius: 5px;
+    font-weight: 300;
+  }
+}

@@ -1,0 +1,7 @@
+@use './page' as *;
+
+$primary: #150bd4;
+
+.home {
+  @include page;
+}
