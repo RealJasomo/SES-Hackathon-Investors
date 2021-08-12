@@ -1,4 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Option from '@material-ui/core/MenuItem';
@@ -21,6 +22,7 @@ export default function SignupInformation(){
     
     const countryContext = useContext(CountryContext);
     const authContext = useContext(AuthenticationContext);
+    const history = useHistory();
 
     const states = useMemo(() => {
         if(country){
@@ -44,7 +46,7 @@ export default function SignupInformation(){
             bio,
             profilePhoto: avatar,
             email: authContext.user?.email ?? '',
-        }, { merge: true});
+        }, { merge: true}).then(() => history.push('/dashboard'));
     }
 
     

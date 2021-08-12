@@ -8,6 +8,7 @@ import {
 import Pages from '@pages';
 import UnauthedNav from '@components/UnauthedNav';
 import CountryProvider from '@contexts/CountryContext';
+import Sidenav from '@components/Sidenav';
 
 import './App.scss';
 
@@ -37,6 +38,9 @@ function App() {
               </Route>
               <Route path="/signup">
                 <Pages.SignupPage />
+              </Route>
+              <Route exact path={['/dashboard', '/investments', '/startups', '/messages', '/search', '/settings']}>
+                <Sidenav/>
               </Route>
               <Route path="/search/startups">
                 <Pages.StartupSearchPage/>
