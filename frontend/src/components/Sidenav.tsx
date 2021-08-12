@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import firebase, { usersRef } from '@fire';
-import { AuthenticationContext } from '@contexts/AuthContext';
-import User from '@interfaces/User';
+import firebase, { useFirebaseUser } from '@fire';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -45,37 +43,25 @@ const sideNavLinks: SideNavLink[] = [{
 
 export default function Sidenav(){
     const [active, setActive] = useState<number>(0);
-    const [user, setUser] = useState<User | null>(null);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
+    const user = useFirebaseUser();
     const history = useHistory();
-    const auth = useContext(AuthenticationContext);
     const avatarRef = useRef(null);
     
 
-    const updateActive = (location: any) => {
+    const updateActive = useCallback((location: any) => {
         const link = sideNavLinks.findIndex(link => link.link === history.location.pathname);
         if(link >= 0){
             setActive(link);
         }
-    }
-
-    useEffect(() => {
-        if(auth.user){
-          usersRef.doc(auth.user.uid).onSnapshot(snap => {
-              if(snap.exists){
-                  setUser(snap.data() as User);
-              }
-        });
-        }
-    }, [auth.user]);
+    }, [history.location.pathname]);
 
     useEffect(() => {
         if(history){
             updateActive(history.location);
             return history.listen(updateActive);
         }
-    }, [history]);
+    }, [history, updateActive]);
 
     const toggleProfileMenu = () => {
         setMenuOpen(open => !open);
