@@ -1,7 +1,8 @@
-@use "./registration" as *;
+@use "./page" as *;
 
 .loginContainer {
   @include page;
+  @include flexCenter;
   .loginCard {
     display: grid;
     min-height: 80vh;

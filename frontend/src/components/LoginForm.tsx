@@ -4,9 +4,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ReactComponent as GoogleIcon } from '@res/google.svg';
 import firebase from '@fire';
-
-import styles from './LoginForm.module.scss';
 import HrWithText from './HrWithText';
+
+import { ReactComponent as Logo } from '@res/logo.svg';
+import styles from './LoginForm.module.scss';
 
 interface ILoginFormProps{
     signup?: boolean,
@@ -53,36 +54,36 @@ export default function LoginForm(props: ILoginFormProps){
 
     return (
         <form className={styles.loginForm} onSubmit={handleSubmit}>
-                    <h1 className={styles.loginHeader}>{pageType}</h1>
-                    <p className={styles.loginSubtitle}>Get ready for liftoff!</p>
-                    <button 
-                        className={styles.googleButton}
-                        onClick={handleGooglelogin}>
-                        <GoogleIcon className={styles.googleLogo}/>
-                        <p>Sign {action} with Google</p>
-                    </button>
-                    <HrWithText text={`or Sign ${action} with Email`}/>
-                    {error&&<p className={styles.error}>{error}</p>}
-                    <div>
-                        <p className={styles.fieldLabel}>Email*</p>
-                        <TextField value={email} onChange={handleTextChange(setEmail)} placeholder="email@email.com" variant="outlined" fullWidth required/>
-                    </div>
-                    <div>
-                        <p className={styles.fieldLabel}>Password*</p>
-                        <TextField value={password} onChange={handleTextChange(setPassword)} placeholder="Min. 8 characters" type="password" variant="outlined" fullWidth required/>
-                    </div>
-                   {!props.signup&&<div className={styles.loginFooter}>
-                       <FormControlLabel
-                        label="Remember me"
-                        labelPlacement="end"
-                        control={<Checkbox color="primary"/>}/>
-                        <a href="#">Forgot Password?</a>
-                   </div>}
-                    <button
-                        type="submit"
-                        className={styles.loginButton}>
-                            {pageType}
-                    </button>
-                </form>
-    );
+            <Logo className={styles.logo}/>
+            <h1 className={styles.loginHeader}>{pageType}</h1>
+            <p className={styles.loginSubtitle}>Get ready for liftoff!</p>
+            <button 
+                className={styles.googleButton}
+                onClick={handleGooglelogin}>
+                <GoogleIcon className={styles.googleLogo}/>
+                <p>Sign {action} with Google</p>
+            </button>
+            <HrWithText text={`or Sign ${action} with Email`}/>
+            {error&&<p className={styles.error}>{error}</p>}
+            <div>
+                <p className={styles.fieldLabel}>Email*</p>
+                <TextField value={email} onChange={handleTextChange(setEmail)} placeholder="email@email.com" variant="outlined" fullWidth required/>
+            </div>
+            <div>
+                <p className={styles.fieldLabel}>Password*</p>
+                <TextField value={password} onChange={handleTextChange(setPassword)} placeholder="Min. 8 characters" type="password" variant="outlined" fullWidth required/>
+            </div>
+            {!props.signup&&<div className={styles.loginFooter}>
+                <FormControlLabel
+                label="Remember me"
+                labelPlacement="end"
+                control={<Checkbox color="primary"/>}/>
+                <a href="#">Forgot Password?</a>
+            </div>}
+            <button
+                type="submit"
+                className={styles.loginButton}>
+                    {pageType}
+            </button>
+        </form>);
 }

@@ -28,7 +28,7 @@ export default function SignupInformation(){
         }else{
             return null;
         }
-    }, [country]);
+    }, [country, countryContext.countries]);
 
     const handleTextChange = (updator: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         updator(e.target.value);
@@ -56,7 +56,7 @@ export default function SignupInformation(){
                 <p>Avatar (optional)</p>
                 <div className={styles.avatar}
                     onClick={() => setAvatarOpen(true)}>
-                    {avatar ? <img src={avatar} /> : <p>+</p>}
+                    {avatar ? <img src={avatar} alt="user avatar"/> : <p>+</p>}
                 </div>
             </div>
             <div className={styles.bio}>

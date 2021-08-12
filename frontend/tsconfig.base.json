@@ -26,7 +26,8 @@
       "@pages": ["pages"],
       "@res/*": ["res/*"],
       "@components/*": ["components/*"],
-      "@interfaces/*": ["interfaces/*"]
+      "@interfaces/*": ["interfaces/*"],
+      "@hoc/*": ["hoc/*"]
     }
   },
   "include": [

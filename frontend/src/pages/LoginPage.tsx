@@ -1,9 +1,10 @@
 import React from 'react';
 import LoginForm from '@components/LoginForm';
+import withAuthentication from '@hoc/withAuthentication';
 
 import styles from './LoginPage.module.scss';
 
-export default function LoginPage(){
+function LoginPage(){
     return(
     <div className={styles.loginContainer}>
         <div className={styles.loginCard}>
@@ -16,3 +17,5 @@ export default function LoginPage(){
         </div>
     </div>);
 }
+
+export default withAuthentication(LoginPage, '/dashboard', true);
