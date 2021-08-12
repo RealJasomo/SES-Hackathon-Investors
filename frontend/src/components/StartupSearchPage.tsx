@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import firebase from '@fire';
 import countries from '../data/countries.json';
 import us_territories from '../data/us_territories.json'
-import { stringLiteralTypeAnnotation } from '@babel/types';
 
-function SearchPage() {
+function StartupSearchPage() {
     const db = firebase.firestore(); // database
 
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
@@ -19,6 +18,9 @@ function SearchPage() {
     const tagOptions = ["dog", "tail", "startup", "tech", "marketing"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
 
+    const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
+    const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
+
     // React hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
         let arr: firebase.firestore.DocumentData[] = []; // temp array
@@ -31,6 +33,10 @@ function SearchPage() {
                     
                     // Search query
                     validated = validated && (search === "" || search.toLowerCase().includes(startup.name.toLowerCase()) || startup.name.toLowerCase().includes(search.toLowerCase()));
+                    
+                    // Search query in startup's tags
+                    validated = validated || (search === "" || (startup.tags !== undefined && startup.tags.includes(search.toLowerCase())));
+
                     // Tag fields
                     tags.map(tag => {
                         validated = validated && (startup.tags !== undefined && startup.tags.includes(tag));
@@ -41,6 +47,9 @@ function SearchPage() {
 
                     // Territory
                     validated = validated && (territory.code === "" || territory.code === startup.state);
+
+                    // Percent Goal Reached
+                    validated = validated && (goalPercent < 0 || ((goalPercent - 0.25) < (startup.amountInvested / startup.goal) && (startup.amountInvested / startup.goal) <= goalPercent));
 
                     if (validated) {
                         arr.push(startup);
@@ -53,7 +62,7 @@ function SearchPage() {
            
         });
         
-    }, [search, tags.length, country, territory]); // dependencies are search, tags
+    }, [search, tags.length, country, territory, goalPercent]); // dependencies 
 
 
     // Handles search query
@@ -82,6 +91,12 @@ function SearchPage() {
         //console.log(arr);
     }
 
+    function handleGoalPercent(e) {
+        let val = e.target.value;
+        setGoalPercent(val);
+        //console.log(val)
+    }
+
     // Handles country selection
     function handleCountry(e) {
         let co = JSON.parse(e.target.value);
@@ -106,7 +121,7 @@ function SearchPage() {
                 <input onChange={handleSearch}></input>
             </label>
             <div>
-                <label>Tags:
+                <h4>Tags:</h4>
                 {tagOptions.map((tag) => {
                         return (
                         <div>
@@ -115,8 +130,8 @@ function SearchPage() {
                         )
                     })
                 }
-                </label>
-                <h5>Location: </h5>
+                
+                <h4>Location: </h4>
                 <label>Country:
                     <select onChange={handleCountry}>
                         <option value={JSON.stringify(defaultCountry)}>{defaultCountry.code}</option>
@@ -148,18 +163,40 @@ function SearchPage() {
                 </label>
                 : <></>
                 }          
-            </div>
-            <hr></hr>
-            <h2>Startups: </h2>
-            {startups.map((startup) => {
-                return (
+
+                <div>
+                    <h4>% Goal Reached: </h4>
                     <div>
-                        <h4>{startup.name}</h4>    
+                        <label><input type="radio" name={"% Goals Reached"} value={-1.0} onChange={handleGoalPercent} defaultChecked></input>{"Any"}</label>
                     </div>
-                )
-            })}
+                    {goalPercentBreakpoints.map((breakpoint, index) => {
+                        if (index > 0) {
+                            return (
+                                <div>
+                                    <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "%" + " — " + ((breakpoint * 100) - 1) + "%"}</label>
+                                </div>
+                            )
+                        }
+                    })
+                    }
+                </div>
+            </div>
+
+            <hr></hr>
+            <div>
+                <h2>Startups: </h2>
+                {startups.map((startup) => {
+                    return (
+                        <div>
+                            <h4>{startup.name + " | " + "$" + startup.amountInvested + "/" + "$" + startup.goal + " (" + (Math.trunc(startup.amountInvested * 100 / startup.goal)) + "%) " + "raised!"}</h4> 
+                            
+                        </div>
+                    )
+                })}
+            </div>
+          
         </div>
     )
 }
 
-export default SearchPage
+export default StartupSearchPage

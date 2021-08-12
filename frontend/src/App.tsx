@@ -6,7 +6,7 @@ import {
   Route,
  } from 'react-router-dom';
 import './App.scss';
-import SearchPage from './components/SearchPage';
+import StartupSearchPage from './components/StartupSearchPage';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/"></Route>
-            <Route exact path="/search" component={SearchPage}></Route>
+            <Route exact path="/search/startups" component={StartupSearchPage}></Route>
           </Switch>
         </Router>
       </AuthenticationProvider>
