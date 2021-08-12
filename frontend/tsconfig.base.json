@@ -25,7 +25,8 @@
       "@contexts/*": ["contexts/*"],
       "@pages": ["pages"],
       "@res/*": ["res/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@interfaces/*": ["interfaces/*"]
     }
   },
   "include": [

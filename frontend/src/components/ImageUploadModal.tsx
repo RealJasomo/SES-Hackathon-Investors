@@ -25,7 +25,7 @@ export default function ImageUploadModal(props: IImageUploadModalProps){
         const { files } = e.target;
         if(files){
             const file = files[0];
-            await storageRef.child(`avatars/${uuid()}-${file.name}`)
+            await storageRef.child(`Profile Photos/${uuid()}-${file.name}`)
                     .put(file)
                     .then(async (snapshot: firebase.storage.UploadTaskSnapshot) => {
                         const url = await snapshot.ref.getDownloadURL();

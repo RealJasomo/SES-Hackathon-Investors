@@ -8,11 +8,13 @@ import {
 import Pages from '@pages';
 
 import './App.scss';
+import CountryProvider from '@contexts/CountryContext';
 
 function App() {
   return (
     <div className="App">
       <AuthenticationProvider>
+        <CountryProvider>
         <Router>
           <Switch>
             <React.Suspense fallback={<div>loading...</div>}>
@@ -26,6 +28,7 @@ function App() {
             </React.Suspense>
           </Switch>
         </Router>
+        </CountryProvider>
       </AuthenticationProvider>
     </div>
   );

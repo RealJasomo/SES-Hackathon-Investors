@@ -22,7 +22,7 @@ const steps: IStep[] = [{
 }]
 
 export default function SignupPage(){
-    const [step, setStep] = useState<IStep>(steps[1]);
+    const [step, setStep] = useState<IStep>(steps[0]);
     
     return (
         <div className={styles.signupPage}>
