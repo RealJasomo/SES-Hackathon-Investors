@@ -22,7 +22,9 @@
     "baseUrl": "./src",
     "paths": {
       "@fire": ["firebase/Firebase.ts"],
-      "@contexts/*": ["contexts/*"]
+      "@contexts/*": ["contexts/*"],
+      "@pages": ["pages"],
+      "@res/*": ["res/*"]
     }
   },
   "include": [

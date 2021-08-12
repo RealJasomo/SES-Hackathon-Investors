@@ -5,6 +5,8 @@ import {
   Switch,
   Route,
  } from 'react-router-dom';
+import Pages from '@pages';
+
 import './App.scss';
 
 function App() {
@@ -13,7 +15,15 @@ function App() {
       <AuthenticationProvider>
         <Router>
           <Switch>
-            <Route exact path="/"></Route>
+            <React.Suspense fallback={<div>loading...</div>}>
+              <Route exact path="/"></Route>
+              <Route path="/login">
+                <Pages.LoginPage/>
+              </Route>
+              <Route path="/signup">
+                <Pages.SignupPage />
+              </Route>
+            </React.Suspense>
           </Switch>
         </Router>
       </AuthenticationProvider>
