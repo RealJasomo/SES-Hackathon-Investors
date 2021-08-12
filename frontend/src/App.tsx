@@ -6,7 +6,7 @@ import {
   Route,
  } from 'react-router-dom';
 import './App.scss';
-import TestComponent from './components/TestComponent';
+import SearchPage from './components/SearchPage';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/"></Route>
-            <Route exact path="/database" component={TestComponent}></Route>
+            <Route exact path="/search" component={SearchPage}></Route>
           </Switch>
         </Router>
       </AuthenticationProvider>
