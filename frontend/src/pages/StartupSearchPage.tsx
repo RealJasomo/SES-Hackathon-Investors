@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '@fire';
-import countries from '../data/countries.json';
-import us_territories from '../data/us_territories.json'
+import countriesList from '../res/countries.json';
 
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
@@ -9,10 +8,11 @@ function StartupSearchPage() {
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
    
-    const defaultCountry = {code: "", name: ""}; // default country selection
+    const defaultCountry = {code: "", name: "", states: []}; // default country selection
     const [country, setCountry] = useState(defaultCountry); // country location
 
     const defaultTerritory = {code: "", name: ""}; // using territory because state is a reserved word in react
+    const [territoriesList, setTerritoriesList] = useState<any[]>([defaultTerritory]);
     const [territory, setTerritory] = useState(defaultTerritory);
 
     const tagOptions = ["dog", "tail", "startup", "tech", "marketing"]; // tag options available
@@ -40,6 +40,7 @@ function StartupSearchPage() {
                     // Tag fields
                     tags.map(tag => {
                         validated = validated && (startup.tags !== undefined && startup.tags.includes(tag));
+                        return validated;
                     });
 
                     // Country
@@ -104,13 +105,16 @@ function StartupSearchPage() {
         if (co.code === "") { // reset the territory to avoid errors
             setTerritory(defaultTerritory);
         }
-        //console.log(co);
+        else if (co.states !== null) {
+            setTerritoriesList(co.states);
+        }
+        console.log(co);
     }
 
     function handleTerritories(e) {
         let te = JSON.parse(e.target.value);
         setTerritory(te);
-        //console.log(te);
+        console.log(te);
     }
 
 
@@ -135,11 +139,10 @@ function StartupSearchPage() {
                 <label>Country:
                     <select onChange={handleCountry}>
                         <option value={JSON.stringify(defaultCountry)}>{defaultCountry.code}</option>
-                        <option value={JSON.stringify({code: "US", name: "United States of America"})}>{"US"}</option>
                         <hr></hr>
-                        {countries.map((country) => {
+                        {countriesList.countries.map((country) => {
                             return (
-                                <option value={JSON.stringify(country)}>{country.code}</option>
+                                <option value={JSON.stringify(country)}>{country.name}</option>
                             )
                         })
                         }
@@ -147,13 +150,13 @@ function StartupSearchPage() {
                 </label>
                
                 
-                {country.code !== "" ? <label>State/Territory (US):
+                {country.code !== "" ? <label>State/Territory:
                     <select onChange={handleTerritories}>
                         <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.code}</option>
                         <hr></hr>
-                        {country.code === "US" ? us_territories.map((territory) => {
+                        {territoriesList !== undefined ? territoriesList.map((territory) => {
                             return (
-                                <option value={JSON.stringify(territory)}>{territory.code}</option>
+                                <option value={JSON.stringify(territory)}>{territory.name}</option>
                             )
                         })
                         :
@@ -173,10 +176,11 @@ function StartupSearchPage() {
                         if (index > 0) {
                             return (
                                 <div>
-                                    <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "%" + " — " + ((breakpoint * 100) - 1) + "%"}</label>
+                                    <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "% — " + ((breakpoint * 100) - 1) + "%"}</label>
                                 </div>
                             )
                         }
+                        return <></>
                     })
                     }
                 </div>
@@ -188,7 +192,7 @@ function StartupSearchPage() {
                 {startups.map((startup) => {
                     return (
                         <div>
-                            <h4>{startup.name + " | " + "$" + startup.amountInvested + "/" + "$" + startup.goal + " (" + (Math.trunc(startup.amountInvested * 100 / startup.goal)) + "%) " + "raised!"}</h4> 
+                            <h4>{startup.name + " | $" + startup.amountInvested + "/$" + startup.goal + " (" + (Math.trunc(startup.amountInvested * 100 / startup.goal)) + "%) raised!"}</h4> 
                             
                         </div>
                     )
