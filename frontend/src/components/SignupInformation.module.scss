@@ -1,0 +1,44 @@
+$primary: #150bd4;
+.signupInformationContainer {
+  padding: 3rem;
+  .optionalAboutInformation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $primary;
+    width: 4em;
+    height: 4em;
+    border-radius: 50%;
+    text-align: center;
+    color: #ffffff;
+    border: 3px solid #d8d8d8;
+    cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .requiredAboutInformation {
+    .textField {
+      margin-top: 1rem;
+    }
+    .countryPicker {
+      p {
+        margin-top: 1rem;
+      }
+    }
+  }
+  .saveButton {
+    background: $primary;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    margin-top: 1rem;
+    float: right;
+  }
+}

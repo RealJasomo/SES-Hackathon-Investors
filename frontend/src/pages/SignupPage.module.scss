@@ -1,0 +1,38 @@
+@use './registration.scss' as *;
+
+.signupPage {
+  @include page;
+  .signupCard {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: #ffffff;
+    width: 80vw;
+    min-height: 80vh;
+    & > div {
+      padding: 1rem;
+    }
+    .signupProgress {
+      background-color: #2c3b54;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      .brand {
+        h1 {
+          font-size: 1.25em;
+        }
+      }
+      .steps {
+        margin-block: auto;
+        p {
+          font-size: 0.75em;
+        }
+        .stepper {
+          background-color: transparent;
+          span {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

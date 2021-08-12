@@ -1,0 +1,15 @@
+@use "./registration" as *;
+
+.loginContainer {
+  @include page;
+  .loginCard {
+    display: grid;
+    min-height: 80vh;
+    width: 80vw;
+    grid-template-columns: 1fr 1fr;
+    background-color: #ffffff;
+    .loginAside {
+      background-color: $primary;
+    }
+  }
+}
