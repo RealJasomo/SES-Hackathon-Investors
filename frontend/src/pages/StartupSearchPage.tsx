@@ -1,36 +1,76 @@
 import React, { useEffect, useState } from 'react';
-import firebase from '@fire';
+import firebase, { useFirebaseUser } from '@fire';
 import countriesList from '../res/countries.json';
-import { useContext } from 'react';
-import { AuthenticationContext } from '@contexts/AuthContext';
+
 
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
-
-    const authContext = useContext(AuthenticationContext);
-    const user = authContext.user; // user profile
-
+    const user = useFirebaseUser(); // custom hook to retrieve global user
+    
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
     
-    const defaultCountry = {code: "", name: "", states: []}; // default country selection
+    const emptyCountry = {code: "", name: "", states: [{name: "", code: ""}]}; // empty case
+    const [defaultCountry, setDefaultCountry] = useState(emptyCountry); // default value
     const [country, setCountry] = useState(defaultCountry); // country location
+    
+    const emptyTerritory = {code: "", name: ""}; // empty case
+    const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
+    const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
 
-    const defaultTerritory = {code: "", name: ""}; // using territory because state is a reserved word in react
-    const [territoriesList, setTerritoriesList] = useState<any[]>([defaultTerritory]);
-    const [territory, setTerritory] = useState(defaultTerritory);
+   
+    // Helper function to find a territory within a country
+    function countryContains(country, territory) {
+        let result = null;
+        if (country.states !== null) {
+            country.states.forEach(st => {
+                if (st.code === territory.code || st.name === territory.name) {
+                    //console.log(st.code)
+                    result = st;
+                }
+            });
+        }
+        return result;
+    }
 
-    const tagOptions = ["dog", "tail", "startup", "tech", "marketing"]; // tag options available
+    // useEffect hook that sets the default value of location based on the user's profile
+    useEffect(() => {
+        if (user) { // set default country to user's location
+            countriesList.countries.forEach(co => {
+                if (co.code === user.country) {
+                    if (co.states === null) {
+                        let obj = {code: co.code, name: co.name, states: []}; // deal with weird type checks
+                        setCountry(obj);
+                        setDefaultCountry(obj);
+                    }
+                    else {
+                        setCountry(co);
+                        setDefaultCountry(co);
+                        let terr = countryContains(co, {code: user.state, name: user.state})
+                            if (terr !== null) {
+                                setTerritory(terr);
+                                setDefaultTerritory(terr);
+                            }
+                        
+                    }   
+                    
+                    return
+                }
+            })
+        }
+    }, [user])
+
+    const tagOptions = ["dog", "tail", "tech", "marketing"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
 
     const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
     const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
 
-    // React hook that runs when the component loads or when search, tags, or location fields are changed
+    // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
+       
+        // Startups retrieval
         let arr: firebase.firestore.DocumentData[] = []; // temp array
-        
-
         db.collection("startups").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 startups stored in database
             snapshot.forEach((doc) => {
                 if (doc.exists) { 
@@ -58,7 +98,7 @@ function StartupSearchPage() {
                     // Percent Goal Reached
                     validated = validated && (goalPercent < 0 || ((goalPercent - 0.25) < (startup.amountInvested / startup.goal) && (startup.amountInvested / startup.goal) <= goalPercent));
 
-                    if (validated) {
+                    if (validated) { // add startup to list to display
                         arr.push(startup);
                     }
                 }
@@ -69,7 +109,7 @@ function StartupSearchPage() {
            
         });
         
-    }, [search, tags.length, country, territory, goalPercent]); // dependencies 
+    }, [search, tags, country, territory, goalPercent]); // dependencies 
 
 
     // Handles search query
@@ -106,21 +146,34 @@ function StartupSearchPage() {
 
     // Handles country selection
     function handleCountry(e) {
-        let co = JSON.parse(e.target.value);
-        setCountry(co);
-        if (co.code === "") { // reset the territory to avoid errors
-            setTerritory(defaultTerritory);
+        let co = e.target.value;
+        if (co === "-") { 
+            setCountry(emptyCountry);
+            setTerritory(emptyTerritory); // reset the territory to avoid errors
         }
-        else if (co.states !== null) {
-            setTerritoriesList(co.states);
+        else {
+            setCountry(JSON.parse(co));
+            let terr = countryContains(JSON.parse(co), defaultTerritory) // check if country contains default territory
+            if (terr !== null) {
+                setTerritory(terr);
+            }
+            else {
+                setTerritory(emptyTerritory); // reset the territory to avoid errors
+            }
         }
-        console.log(co);
+       
     }
 
     function handleTerritories(e) {
-        let te = JSON.parse(e.target.value);
-        setTerritory(te);
-        console.log(te);
+        let te = e.target.value;
+        if (te === "-") {
+            setTerritory(emptyTerritory);
+        }
+        else {
+            setTerritory(JSON.parse(te));
+            //console.log(JSON.parse(te));
+        }
+        
     }
 
 
@@ -144,7 +197,8 @@ function StartupSearchPage() {
                 <h4>Location: </h4>
                 <label>Country:
                     <select onChange={handleCountry}>
-                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.code}</option>
+                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
+                        <option value={"-"}>{"-"}</option>
                         <hr></hr>
                         {countriesList.countries.map((country) => {
                             return (
@@ -156,18 +210,34 @@ function StartupSearchPage() {
                 </label>
                
                 
-                {country.code !== "" ? <label>State/Territory:
+                {country.states !== null ? <label>State/Territory:
                     <select onChange={handleTerritories}>
-                        <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.code}</option>
-                        <hr></hr>
-                        {territoriesList !== undefined ? territoriesList.map((territory) => {
-                            return (
-                                <option value={JSON.stringify(territory)}>{territory.name}</option>
-                            )
-                        })
-                        :
-                        <></>
-                        }
+                        {country.states.map((territory, index) => {
+                            let terr = countryContains(country, defaultTerritory);
+                            if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
+                                return (
+                                    <>
+                                        <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option> 
+                                        <option value={"-"}>{"-"}</option>
+                                        <hr></hr>
+                                    </>
+                                )
+                            }
+                            else if (index === 0) { // otherwise place the "-" option
+                                return (
+                                    <>
+                                        <option value={"-"}>{"-"}</option>
+                                        <hr></hr>
+                                        {territory !== emptyTerritory ? <option value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+                                    </>
+                                )
+                            }
+                            else { // all other cases place the current territory in the list
+                                return (
+                                    <option value={JSON.stringify(territory)}>{territory.name}</option>
+                                )
+                            }
+                        })}
                     </select>
                 </label>
                 : <></>
