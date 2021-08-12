@@ -24,7 +24,8 @@
       "@fire": ["firebase/Firebase.ts"],
       "@contexts/*": ["contexts/*"],
       "@pages": ["pages"],
-      "@res/*": ["res/*"]
+      "@res/*": ["res/*"],
+      "@components/*": ["components/*"]
     }
   },
   "include": [

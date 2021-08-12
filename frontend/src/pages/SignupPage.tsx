@@ -1,3 +1,4 @@
+import LoginForm from '@components/LoginForm';
 import { Step, StepLabel, Stepper } from '@material-ui/core';
 import React, { useState } from 'react';
 
@@ -45,7 +46,7 @@ export default function SignupPage(){
                     </div>
                 </div>
                 <div className={styles.signupArea}>
-                    
+                    {step.number==1&&<LoginForm signup/>}
                 </div>
             </div>
         </div>);
