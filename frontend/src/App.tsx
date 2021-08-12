@@ -6,6 +6,7 @@ import {
   Route,
  } from 'react-router-dom';
 import './App.scss';
+import TestComponent from './components/TestComponent';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/"></Route>
+            <Route exact path="/database" component={TestComponent}></Route>
           </Switch>
         </Router>
       </AuthenticationProvider>
