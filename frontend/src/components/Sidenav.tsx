@@ -68,7 +68,7 @@ export default function Sidenav(){
     }
     
     const handleSignout = async () => {
-        await firebase.auth().signOut();
+        await firebase.auth().signOut().then(() => history.push('/'));
     }
 
     return(

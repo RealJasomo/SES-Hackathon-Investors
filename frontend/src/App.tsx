@@ -19,7 +19,6 @@ function App() {
         <CountryProvider>
         <Router>
           <Switch>
-            <Route exact path="/"></Route>
             <React.Suspense fallback={<div>loading...</div>}>
               <Route exact path={['/', '/contact', '/about']}>
                 <UnauthedNav/>
