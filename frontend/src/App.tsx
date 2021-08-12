@@ -18,6 +18,7 @@ function App() {
         <CountryProvider>
         <Router>
           <Switch>
+            <Route exact path="/"></Route>
             <React.Suspense fallback={<div>loading...</div>}>
               <Route exact path={['/', '/contact', '/about']}>
                 <UnauthedNav/>
@@ -36,6 +37,9 @@ function App() {
               </Route>
               <Route path="/signup">
                 <Pages.SignupPage />
+              </Route>
+              <Route path="/search/startups">
+                <Pages.StartupSearchPage/>
               </Route>
             </React.Suspense>
           </Switch>
