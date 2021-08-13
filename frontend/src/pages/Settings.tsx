@@ -80,7 +80,7 @@ function Settings(){
             </div>
             <div className={styles.bio}>
                 <p>Bio</p>
-                <TextField value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} variant="outlined" fullWidth placeholder="enter a short bio..."/>
+                <TextField value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} variant="outlined" multiline fullWidth placeholder="enter a short bio..."/>
             </div>
         </div>
         <div className={styles.requiredAboutInformation}>
