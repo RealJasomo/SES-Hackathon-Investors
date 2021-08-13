@@ -1,4 +1,4 @@
-# SES Hackathon Investor/Startup Project
+# SES Hackathon *LaunchPad*: Take your startup to the moon!
 
 ## Members
 
@@ -16,4 +16,4 @@ Our web application's goal is to provide a simple platform to connect investors 
 
 - React
 - Firebase
-- Elasticsearch
+
