@@ -1,4 +1,4 @@
-$primary: #150bd4;
+$primary: #0B4578;
 
 .unAuthenticatedNav {
   display: flex;
@@ -19,11 +19,11 @@ $primary: #150bd4;
     }
   }
   button {
-    margin-inline: 1rem;
+    margin-inline: 0.5rem;
     padding: 0.25rem;
     color: #ffffff;
-    background-color: $primary;
-    border-radius: 5px;
+    border-radius: 0px;
     font-weight: 300;
+    background-color: rgb(79, 119, 179);
   }
 }
