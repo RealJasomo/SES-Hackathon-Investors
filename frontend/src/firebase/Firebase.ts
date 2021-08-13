@@ -137,7 +137,10 @@ export function useRecommendedStartups() : Startup[] {
                     validate = validate || (user.state === startup.state);
 
                     if (validate) {
-                        arr.push(startup as Startup);
+                        arr.push({ 
+                            id: doc.id,
+                             ...startup 
+                            }as Startup);
                     }
                 })
                 setRecommendedStartups(arr);
@@ -187,7 +190,10 @@ export function useRecommendedInvestors() : User[] {
                     validate = validate || (user.state === investor.state);
 
                     if (validate && investor.isInvestor && user.email !== investor.email) {
-                        arr.push(investor as User);
+                        arr.push({ 
+                            id: doc.id,
+                            ...investor
+                        } as User);
                     }
                 })
                 setRecommendedInvestors(arr);
