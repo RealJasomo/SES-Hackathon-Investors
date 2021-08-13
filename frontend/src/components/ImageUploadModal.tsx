@@ -9,7 +9,8 @@ import firebase, { storageRef } from '@fire';
 interface IImageUploadModalProps{
     open: boolean,
     onClose: () => void,
-    setUrl: React.Dispatch<React.SetStateAction<string>>
+    setUrl: React.Dispatch<React.SetStateAction<string>>,
+    collection?: string,
 }
 
 export default function ImageUploadModal(props: IImageUploadModalProps){
@@ -25,7 +26,7 @@ export default function ImageUploadModal(props: IImageUploadModalProps){
         const { files } = e.target;
         if(files){
             const file = files[0];
-            await storageRef.child(`Profile Photos/${uuid()}-${file.name}`)
+            await storageRef.child(`${props.collection ?? 'Profile Photos'}/${uuid()}-${file.name}`)
                     .put(file)
                     .then(async (snapshot: firebase.storage.UploadTaskSnapshot) => {
                         const url = await snapshot.ref.getDownloadURL();

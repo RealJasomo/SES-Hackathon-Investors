@@ -80,7 +80,10 @@ export default function SignupInformation(){
                 <p>Country*</p>
                 <Select
                     value={country}
-                    onChange={e => setCountry(e.target.value as string)}
+                    onChange={e => {
+                        setCountry(e.target.value as string);
+                        setState('');
+                    }}
                     fullWidth
                     required>
                     {countryContext.countries?.map?.(country => <Option key={country.code} value={country.code}>{country.name}</Option>)}

@@ -1,6 +1,6 @@
 $gray: #ececf3;
 $darkgray: #9e9e9f;
-$primary: #0B4578;
+$primary: #0b4578;
 .sideNav {
   background-color: white;
   display: flex;
@@ -81,6 +81,7 @@ $primary: #0B4578;
     font-weight: 500;
     border-radius: 15px;
     font-size: 1.25rem;
+    margin-block: 1rem;
     &::before {
       content: "+";
       margin-right: 1rem;
