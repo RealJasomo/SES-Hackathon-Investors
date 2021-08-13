@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/storage';
 import { AuthenticationContext } from '@contexts/AuthContext';
+import { idText } from 'typescript';
 
 const config = {
     apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -43,7 +44,10 @@ export function useInvestiments(): Startup[]{
     useEffect(() => {
         if(user){
             const startups = user.investedStartups?.map(async (startupRef) => {
-                return (await startupRef.get()).data() as Startup;
+                return {
+                    id: startupRef.id, 
+                    ...(await startupRef.get()).data()
+                } as Startup;
             });
             Promise.all(startups ?? []).then(startups => setStartups(startups));
         }
@@ -57,7 +61,10 @@ export function useInvestors(): User[] {
     useEffect(() => {
         if(startups.length != 0){
             const investors = startups.map(startup => startup.investors?.map(async investor => {
-                return (await investor.get()).data() as User;
+                return {
+                    id: investor.id,
+                    ...(await investor.get()).data(),
+                }as User;
             })).reduce((a, c) => {
                 return [...a, ...c]
             }, []);
@@ -74,7 +81,10 @@ export function useStartups(): Startup[]{
     useEffect(() => {
         if(user){
             const startups = user.ownedStartups?.map(async (startupRef) => {
-                return (await startupRef.get()).data() as Startup;
+                return {
+                    id: startupRef.id,
+                    ...(await startupRef.get()).data(),
+                } as Startup;
             });
             Promise.all(startups ?? []).then(startups => setStartups(startups));
         }
