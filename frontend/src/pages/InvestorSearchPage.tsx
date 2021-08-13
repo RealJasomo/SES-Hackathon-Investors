@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import firebase, { useFirebaseUser } from '@fire';
 import countriesList from '../res/countries.json';
+import UserCard from '@components/UserCard';
+import User from '@interfaces/User';
 
 
 function InvestorSearchPage() {
@@ -74,34 +76,35 @@ function InvestorSearchPage() {
         db.collection("users").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 users stored in database
             snapshot.forEach((doc) => {
                 if (doc.exists) {
-                    let user = doc.data();
+                    let investor = doc.data();
                     let validated = true;
 
                     // Search query
-                    validated = validated && (search === "" || search.toLowerCase().includes(user.firstName.toLowerCase()) || user.lastName.toLowerCase().includes(search.toLowerCase()));
+                    validated = validated && (search === "" || search.toLowerCase().includes(investor.firstName.toLowerCase()) || investor.lastName.toLowerCase().includes(search.toLowerCase()));
 
-                    // Search query in user's tags
-                    validated = validated || (search === "" || (user.tags !== undefined && user.tags.includes(search.toLowerCase())));
+                    // Search query in investor's tags
+                    validated = validated || (search === "" || (investor.tags !== undefined && investor.tags.includes(search.toLowerCase())));
 
                     // Tag fields
                     tags.map(tag => {
-                        validated = validated && (user.tags !== undefined && user.tags.includes(tag));
+                        validated = validated && (investor.tags !== undefined && investor.tags.includes(tag));
                         return validated;
                     });
 
                     // Country
-                    validated = validated && (country.code === "" || country.code === user.country);
+                    validated = validated && (country.code === "" || country.code === investor.country);
 
                     // Territory
-                    validated = validated && (territory.code === "" || territory.code === user.state);
+                    validated = validated && (territory.code === "" || territory.code === investor.state);
 
-                    // Check that user is an investor
-                    if(user.investedStartups == undefined || user.investedStartups.length == 0) {
-                      validated = false;
-                    }
+                    // Check that investor is an investor
+                    validated = validated && (investor.investedStartups != undefined && investor.investedStartups.length !== 0);
+
+                    // Check that the investor is not the signed in investor
+                    validated = validated && (investor === null || (investor.email !== user?.email));
 
                     if (validated) { // add investor to list to display
-                        arr.push(user);
+                        arr.push(investor);
                     }
                 }
 
@@ -206,7 +209,7 @@ function InvestorSearchPage() {
                 </label>
 
 
-                {country.states !== null ? <label>State/Territory:
+                {country.states !== null && country.code !== "" ? <label>State/Territory:
                     <select onChange={handleTerritories}>
                         {country.states.map((territory, index) => {
                             let terr = countryContains(country, defaultTerritory);
@@ -247,7 +250,7 @@ function InvestorSearchPage() {
                 {investors.map((investor) => {
                     return (
                         <div>
-                            <h4>{investor.firstName + " | " + investor.lastName}</h4>
+                            <UserCard user={investor as User}/>
 
                         </div>
                     )

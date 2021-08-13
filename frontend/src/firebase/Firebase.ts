@@ -38,7 +38,7 @@ export function useFirebaseUser(): User | null {
     return user;
 }
 
-export function useInvestiments(): Startup[]{
+export function useInvestments(): Startup[]{
     const user = useFirebaseUser();
     const [startups, setStartups] = useState<Startup[]>([]);
     useEffect(() => {
@@ -92,5 +92,6 @@ export function useStartups(): Startup[]{
 
     return startups;
 }
+
 
 export default firebase;

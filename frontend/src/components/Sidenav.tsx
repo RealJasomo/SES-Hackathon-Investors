@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import firebase, { useFirebaseUser } from '@fire';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { capitalize } from '@util/utils';
-
 import { ReactComponent as Logo } from '@res/logo.svg';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ForumIcon from '@material-ui/icons/Forum';
@@ -13,6 +11,7 @@ import Settings from '@material-ui/icons/Settings';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import BusinessIcon from '@material-ui/icons/Business';
 import { Avatar } from '@material-ui/core';
+import { capitalize } from '@util/utils';
 
 type SideNavLink = Omit<ISidenavItemProps, 'active'>;
 const sideNavLinks: SideNavLink[] = [{
