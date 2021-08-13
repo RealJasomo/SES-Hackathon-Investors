@@ -13,7 +13,7 @@ $darkgray: #9e9e9f;
     padding: 0.25rem 1rem;
     margin: 0 0.5rem;
     &::before {
-      content: "+";
+      content: "#";
       color: $darkgray;
       margin-right: 0.25rem;
     }
