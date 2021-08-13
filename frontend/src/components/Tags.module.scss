@@ -1,0 +1,21 @@
+$gray: #ececf3;
+$darkgray: #9e9e9f;
+.tagsContainer {
+  display: flex;
+  align-items: center;
+  p {
+    flex-grow: 1;
+  }
+  .tag {
+    justify-self: flex-end;
+    background-color: $gray;
+    border-radius: 5px;
+    padding: 0.25rem 1rem;
+    margin: 0 0.5rem;
+    &::before {
+      content: "+";
+      color: $darkgray;
+      margin-right: 0.25rem;
+    }
+  }
+}
