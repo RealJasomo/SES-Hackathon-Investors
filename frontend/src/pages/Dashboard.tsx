@@ -10,7 +10,7 @@ import { capitalize } from '@util/utils';
 import styles from './Dashboard.module.scss';
 
 
-const tabs: string[] = ["My Investors", "My Startups", "My Investiments"];
+const tabs: string[] = ["My Investors", "My Startups", "My Investments"];
 
 function Dashboard(){
     const [activeTab, setActiveTab] = useState<number>(0);
@@ -26,7 +26,7 @@ function Dashboard(){
     <div className={styles.dashboard}>
         <h1 className={styles.welcome}>Welcome back, {capitalize(user?.firstName ?? 'FirstName')}!</h1>
         <div className={styles.mySection}>
-             <h2 className={styles.sectionHeading}>Investors, Startups, and Investiments</h2>
+             <h2 className={styles.sectionHeading}>Investors, Startups, and Investments</h2>
              <Tabs
                 value={activeTab}
                 indicatorColor="primary"
