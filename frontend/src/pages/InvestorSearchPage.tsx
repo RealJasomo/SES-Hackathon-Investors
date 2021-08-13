@@ -80,7 +80,7 @@ function InvestorSearchPage() {
                    let validated = true;
 
                    // If user is not an investor, set validated to false
-                   if(user.investedStartups == undefined || user.investedStartups.length == 0) {
+                   if(user.isInvestor == null || user.isInvestor == false) {
                      validated = false;
                    }
 
