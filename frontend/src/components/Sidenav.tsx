@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import firebase, { useFirebaseUser } from '@fire';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ReactComponent as Logo } from '@res/logo.svg';
+import BlueRed from '@res/BlueRedLogo.png';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ForumIcon from '@material-ui/icons/Forum';
 import Settings from '@material-ui/icons/Settings';
@@ -73,10 +73,11 @@ export default function Sidenav(){
     return(
     <div className={styles.sideNav}>
         <div className={styles.brand}>
-            <div className={styles.logoContainer}>
+            <img src={BlueRed}/>
+            {/* <div className={styles.logoContainer}>
                 <Logo className={styles.logo}/>
             </div>
-            <p className={styles.brandText}>LaunchPad</p>
+            <p className={styles.brandText}>LaunchPad</p> */}
         </div>
         <div className={styles.profile}>
             <Avatar ref={avatarRef} onClick={toggleProfileMenu} alt="Profile" {...(user&&{src: user.profilePhoto})} className={styles.avatar}/>

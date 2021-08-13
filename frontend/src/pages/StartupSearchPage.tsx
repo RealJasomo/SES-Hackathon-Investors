@@ -3,6 +3,7 @@ import firebase, { useFirebaseUser, useRecommendedStartups } from '@fire';
 import countriesList from '../res/countries.json';
 import StartupCard from '@components/StartupCard';
 import Startup from '@interfaces/Startup';
+import Searchbox from '@components/Searchbox';
 
 import styles from './Search.module.scss';
 
@@ -182,9 +183,7 @@ function StartupSearchPage() {
 
     return (
         <div className={styles.search}>           
-                <label>Search:
-                    <input onChange={handleSearch}></input>
-                </label>
+                <Searchbox value={search} onChange={handleSearch}/>
                 <div>
                     <h4>Tags:</h4>
                     {tagOptions.map((tag) => {
