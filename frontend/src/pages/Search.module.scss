@@ -1,13 +1,15 @@
 .search {
   display: flex;
   margin: 0 auto;
-  padding: 3rem;
   flex-direction: column;
   flex-wrap: nowrap;
   padding: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  max-width: 50rem;
   label {
     display: inline;
-    margin-block: 1rem;
+    margin-block: 2rem;
     margin-right: 1rem;
     input {
       margin-left: 1rem;
@@ -22,6 +24,7 @@
   }
   h4 {
     margin-block: 1rem;
+    margin-top: 1rem;
     font-weight: 400;
   }
   hr {

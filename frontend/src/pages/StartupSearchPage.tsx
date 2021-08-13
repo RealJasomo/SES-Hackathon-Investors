@@ -3,13 +3,14 @@ import firebase, { useFirebaseUser, useRecommendedStartups } from '@fire';
 import countriesList from '../res/countries.json';
 import StartupCard from '@components/StartupCard';
 import Startup from '@interfaces/Startup';
+import Searchbox from '@components/Searchbox';
 
 import styles from './Search.module.scss';
 import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Card from '@material-ui/core/Card';
-import { CardContent } from '@material-ui/core';
+import { CardContent, CardHeader } from '@material-ui/core';
 
 
 function StartupSearchPage() {
@@ -190,11 +191,9 @@ function StartupSearchPage() {
         <div className={styles.search}>    
 
             <Card>
+                <CardHeader title="Find Startups"></CardHeader>
                 <CardContent>
-
-                
-                <TextField onChange={handleSearch} placeholder="Search..." InputProps={{endAdornment: (<InputAdornment position="end"><SearchIcon/></InputAdornment>)}}/>
-                    
+                <Searchbox value={search} onChange={handleSearch}/>
                 <div>
                     <h4>Tags:</h4>
                     {tagOptions.map((tag) => {
@@ -276,7 +275,7 @@ function StartupSearchPage() {
                 </div>
             </CardContent>
         </Card>    
-           
+           <br></br>
 
             {showRecommended ? 
                 <div>
