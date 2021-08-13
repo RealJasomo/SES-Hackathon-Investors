@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/storage';
 import { AuthenticationContext } from '@contexts/AuthContext';
-import { idText } from 'typescript';
+
 
 const config = {
     apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -29,7 +29,10 @@ export function useFirebaseUser(): User | null {
         if(auth.user){
           usersRef.doc(auth.user.uid).onSnapshot(snap => {
               if(snap.exists){
-                  setUser(snap.data() as User);
+                  setUser({
+                    id: snap.id,
+                    ...snap.data()
+                } as User);
               }
         });
         }
@@ -59,7 +62,7 @@ export function useInvestors(): User[] {
     const startups = useStartups();
     const [investors, setInvenstors]= useState<User[]>([]);
     useEffect(() => {
-        if(startups.length != 0){
+        if(startups.length !== 0){
             const investors = startups.map(startup => startup.investors?.map(async investor => {
                 return {
                     id: investor.id,
@@ -93,5 +96,37 @@ export function useStartups(): Startup[]{
     return startups;
 }
 
+export function useInvestInStartup(value: number, id: string): () => Promise<boolean>{
+    const user = useFirebaseUser();
+
+    const execute = async () => {
+       if(!user || value  > (user?.balance??0)){
+           return false;
+       }
+       let userModify = {...user};
+       const userRef = firebase.firestore().collection('users').doc(user.id);
+       const docRef =  firebase.firestore().collection('startups').doc(id);
+       let docData: Startup = ({
+             id,
+           ...(await docRef.get()).data(),
+        }) as Startup;
+        
+        userModify.investedStartups?.push(docRef);
+        if(userModify.balance){
+            userModify.balance -= value;
+        }
+        docData.amountInvested += value;
+        docData.investors.push(userRef);
+        const result = await firebase.firestore().runTransaction(async transaction => {
+            await transaction.set(docRef, docData, { merge: true});
+            await transaction.set(userRef, userModify, { merge: true });
+        }).then(() => true)
+        .catch(() => false);
+
+       return result;
+    };
+
+    return execute;
+}
 
 export default firebase;
