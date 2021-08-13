@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import firebase, { useFirebaseUser } from '@fire';
+import firebase, { useFirebaseUser, useRecommendedInvestors } from '@fire';
 import countriesList from '../res/countries.json';
 import UserCard from '@components/UserCard';
 import User from '@interfaces/User';
@@ -8,6 +8,7 @@ import User from '@interfaces/User';
 function InvestorSearchPage() {
     const db = firebase.firestore(); // database
     const user = useFirebaseUser(); // custom hook to retrieve global user
+    const recommendedInvestors = useRecommendedInvestors();
 
     const [investors, setInvestors] = useState<firebase.firestore.DocumentData[]>([]); // list of investors to display
     const [search, setSearch] = useState(""); // search query
@@ -42,11 +43,9 @@ function InvestorSearchPage() {
                 if (co.code === user.country) {
                     if (co.states === null) {
                         let obj = {code: co.code, name: co.name, states: []}; // deal with weird type checks
-                        setCountry(obj);
                         setDefaultCountry(obj);
                     }
                     else {
-                        setCountry(co);
                         setDefaultCountry(co);
                         let terr = countryContains(co, {code: user.state, name: user.state})
                             if (terr !== null) {
@@ -56,7 +55,7 @@ function InvestorSearchPage() {
 
                     }
 
-                    return
+                    return;
                 }
             })
         }
@@ -64,6 +63,8 @@ function InvestorSearchPage() {
 
     const tagOptions = ["tech", "knowledge", "business", "success"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
+
+    const [showRecommended, setShowRecommended] = useState(true);
 
     // const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
     // const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
