@@ -20,8 +20,7 @@ function InvestorSearchPage() {
     const emptyTerritory = {code: "", name: ""}; // empty case
     const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
     const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
-
-
+    console.log(recommendedInvestors);
     // Helper function to find a territory within a country
     function countryContains(country, territory) {
         let result = null;
@@ -49,19 +48,16 @@ function InvestorSearchPage() {
                         setDefaultCountry(co);
                         let terr = countryContains(co, {code: user.state, name: user.state})
                             if (terr !== null) {
-                                setTerritory(terr);
                                 setDefaultTerritory(terr);
                             }
-
                     }
-
                     return;
                 }
             })
         }
     }, [user])
 
-    const tagOptions = ["tech", "knowledge", "business", "success"]; // tag options available
+    const tagOptions = ["tech", "knowledge", "business", "success", "money"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
 
     const [showRecommended, setShowRecommended] = useState(true);
@@ -81,7 +77,7 @@ function InvestorSearchPage() {
                    let validated = true;
 
                    // If user is not an investor, set validated to false
-                   if(user.isInvestor == null || user.isInvestor == false) {
+                   if(user.isInvestor === null || user.isInvestor === false) {
                      validated = false;
                    }
 
@@ -132,6 +128,7 @@ function InvestorSearchPage() {
             setSearch("");
         }
         //console.log(query);
+        handleRecommended();
     }
 
     // Handles selection of tags to include/declude from search
@@ -146,6 +143,7 @@ function InvestorSearchPage() {
         }
         setTags(arr);
         //console.log(arr);
+        handleRecommended();
     }
 
     // Handles country selection
@@ -153,19 +151,12 @@ function InvestorSearchPage() {
         let co = e.target.value;
         if (co === "-") {
             setCountry(emptyCountry);
-            setTerritory(emptyTerritory); // reset the territory to avoid errors
         }
         else {
-            setCountry(JSON.parse(co));
-            let terr = countryContains(JSON.parse(co), defaultTerritory) // check if country contains default territory
-            if (terr !== null) {
-                setTerritory(terr);
-            }
-            else {
-                setTerritory(emptyTerritory); // reset the territory to avoid errors
-            }
+            setCountry(JSON.parse(co));   
         }
-
+        setTerritory(emptyTerritory); // reset the territory to avoid errors
+        handleRecommended();
     }
 
     function handleTerritories(e) {
@@ -177,7 +168,11 @@ function InvestorSearchPage() {
             setTerritory(JSON.parse(te));
             //console.log(JSON.parse(te));
         }
+        handleRecommended();
+    }
 
+    function handleRecommended() {
+        setShowRecommended(false);
     }
 
 
@@ -201,12 +196,12 @@ function InvestorSearchPage() {
                 <h4>Location: </h4>
                 <label>Country:
                     <select onChange={handleCountry}>
-                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
                         <option value={"-"}>{"-"}</option>
+                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
                         <hr></hr>
-                        {countriesList.countries.map((country) => {
+                        {countriesList.countries.map((country, index) => {
                             return (
-                                <option value={JSON.stringify(country)}>{country.name}</option>
+                                <option key={index} value={JSON.stringify(country)}>{country.name}</option>
                             )
                         })
                         }
@@ -221,24 +216,26 @@ function InvestorSearchPage() {
                             if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
                                 return (
                                     <>
-                                        <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option>
-                                        <option value={"-"}>{"-"}</option>
+                                        <option key={-1} value={"-"}>{"-"}</option>
+                                        <option key={index} value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option>
                                         <hr></hr>
+                                        {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+
                                     </>
                                 )
                             }
                             else if (index === 0) { // otherwise place the "-" option
                                 return (
                                     <>
-                                        <option value={"-"}>{"-"}</option>
+                                        <option key={-1} value={"-"}>{"-"}</option>
                                         <hr></hr>
-                                        {territory !== emptyTerritory ? <option value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+                                        {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
                                     </>
                                 )
                             }
                             else { // all other cases place the current territory in the list
                                 return (
-                                    <option value={JSON.stringify(territory)}>{territory.name}</option>
+                                    <option key={index} value={JSON.stringify(territory)}>{territory.name}</option>
                                 )
                             }
                         })}
@@ -250,17 +247,32 @@ function InvestorSearchPage() {
             </div>
 
             <hr></hr>
-            <div>
-                <h2>Investors: </h2>
-                {investors.map((investor) => {
-                    return (
-                        <div>
-                            <UserCard user={investor as User}/>
 
-                        </div>
-                    )
-                })}
-            </div>
+            {showRecommended ? 
+                <div>
+                    <h2>Recommended Investors: </h2>
+                    {recommendedInvestors.map((investor, index) => {
+                        return (
+                            <div>
+                                <UserCard user={investor as User} key={index}/>
+                            </div>
+                        )
+                    })
+
+                    }
+                </div> 
+                :
+                <div>
+                    <h2>Investors: </h2>
+                    {investors.map((investor, index) => {
+                        return (
+                            <div>
+                                <UserCard user={investor as User} key={index}/>
+                            </div>
+                        )
+                    })}
+                </div>
+            }   
 
         </div>
     )

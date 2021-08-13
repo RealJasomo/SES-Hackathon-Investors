@@ -170,11 +170,11 @@ export function useRecommendedInvestors() : User[] {
     useEffect(() => {
         let arr: User[] = [];
         if (user) {
-            db.collection("startups").limit(100).onSnapshot(snapshot => {
+            db.collection("users").limit(100).onSnapshot(snapshot => {
                 snapshot.forEach(doc => {
                     let investor = doc.data();
                     let validate = false;
-                    let isInvestor = true;
+
                     // add them if any tags match
                     if (user.tags !== null && user.tags !== undefined && investor.tags !== undefined) {
                         investor.tags.forEach(tag => {
@@ -186,7 +186,7 @@ export function useRecommendedInvestors() : User[] {
                     validate = validate || (user.country === investor.country);
                     validate = validate || (user.state === investor.state);
 
-                    if (validate && isInvestor) {
+                    if (validate && investor.isInvestor && user.email !== investor.email) {
                         arr.push(investor as User);
                     }
                 })
