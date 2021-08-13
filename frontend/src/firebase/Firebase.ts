@@ -110,18 +110,26 @@ export function useInvestInStartup(value: number, id: string): () => Promise<boo
              id,
            ...(await docRef.get()).data(),
         }) as Startup;
-        
-        userModify.investedStartups?.push(docRef);
+        if(!userModify.investedStartups){
+            userModify.investedStartups = [];
+        }
+        userModify.investedStartups.push(docRef);
         if(userModify.balance){
             userModify.balance -= value;
         }
         docData.amountInvested += value;
+        if(!docData.investors){
+            docData.investors = [];
+        }
         docData.investors.push(userRef);
         const result = await firebase.firestore().runTransaction(async transaction => {
             await transaction.set(docRef, docData, { merge: true});
             await transaction.set(userRef, userModify, { merge: true });
         }).then(() => true)
-        .catch(() => false);
+        .catch((error) =>{
+            console.log(error);
+            return false;
+        });
 
        return result;
     };
