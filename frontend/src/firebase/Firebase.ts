@@ -106,7 +106,7 @@ export function useRecommendedStartups() : Startup[] {
     function containsTags(tags, target) {
         if (tags !== undefined && tags !== null) {
             tags.forEach(tag => {
-                if (tag.toLowerCase.includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
+                if (tag.toLowerCase().includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
                     return true;
                 }
             });
@@ -159,7 +159,7 @@ export function useRecommendedInvestors() : User[] {
     function containsTags(tags, target) {
         if (tags !== undefined && tags !== null) {
             tags.forEach(tag => {
-                if (tag.toLowerCase.includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
+                if (tag.toLowerCase().includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
                     return true;
                 }
             });
