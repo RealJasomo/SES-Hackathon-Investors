@@ -28,7 +28,7 @@ export default function StartupCard(props: IStartupCardProps){
 
     const canIncrease: boolean = useMemo(() => {
         return investments.findIndex(startup => startup.id === props.startup.id) !== -1;
-    }, [investments]);
+    }, [investments, props.startup]);
     
     return (
     <div className={styles.startupCard}>
@@ -52,6 +52,6 @@ export default function StartupCard(props: IStartupCardProps){
             <LinearProgress variant="determinate" value={Math.round(100*(props.startup.amountInvested / props.startup.goal))}/>
         </div>
         {canInvest&&<button onClick={() => setInvestModalOpen(true)} className={styles.investButton}>Invest</button>}
-        {canIncrease&&<button onClick={() => setInvestIncreaseModalOpen(true)} className={styles.investIncreaseButton}>Increase Investment</button>}
+        {!canInvest&&canIncrease&&<button onClick={() => setInvestIncreaseModalOpen(true)} className={styles.investIncreaseButton}>Increase Investment</button>}
     </div>)
 }

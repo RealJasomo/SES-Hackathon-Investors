@@ -1,0 +1,28 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  padding: 1rem;
+  label {
+    display: inline;
+    margin-block: 1rem;
+    margin-right: 1rem;
+    input {
+      margin-left: 1rem;
+      &[type="checkbox"],
+      &[type="radio"] {
+        margin-right: 1rem;
+      }
+    }
+    select {
+      margin-left: 1rem;
+    }
+  }
+  h4 {
+    margin-block: 1rem;
+    font-weight: 400;
+  }
+  hr {
+    margin-top: 1rem;
+  }
+}
