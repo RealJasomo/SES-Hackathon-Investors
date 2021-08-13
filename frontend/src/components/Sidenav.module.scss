@@ -70,3 +70,20 @@ $primary: #150bd4;
     }
   }
 }
+.addStartupArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .addStartupButton {
+    color: #ffffff;
+    background-color: $primary;
+    padding: 0.25rem 1rem;
+    font-weight: 500;
+    border-radius: 15px;
+    font-size: 1.25rem;
+    &::before {
+      content: "+";
+      margin-right: 1rem;
+    }
+  }
+}
