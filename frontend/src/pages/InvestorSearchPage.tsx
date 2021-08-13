@@ -9,6 +9,7 @@ function InvestorSearchPage() {
     const db = firebase.firestore(); // database
     const user = useFirebaseUser(); // custom hook to retrieve global user
     const recommendedInvestors = useRecommendedInvestors();
+    const [showRecommended, setShowRecommended] = useState(false); // show the recommended list or not
 
     const [investors, setInvestors] = useState<firebase.firestore.DocumentData[]>([]); // list of investors to display
     const [search, setSearch] = useState(""); // search query
@@ -20,7 +21,6 @@ function InvestorSearchPage() {
     const emptyTerritory = {code: "", name: ""}; // empty case
     const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
     const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
-    console.log(recommendedInvestors);
     // Helper function to find a territory within a country
     function countryContains(country, territory) {
         let result = null;
@@ -37,6 +37,7 @@ function InvestorSearchPage() {
 
     // useEffect hook that sets the default value of location based on the user's profile
     useEffect(() => {
+
         if (user) { // set default country to user's location
             countriesList.countries.forEach(co => {
                 if (co.code === user.country) {
@@ -54,16 +55,13 @@ function InvestorSearchPage() {
                     return;
                 }
             })
+            setShowRecommended(true);
         }
     }, [user])
 
     const tagOptions = ["tech", "knowledge", "business", "success", "money"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
 
-    const [showRecommended, setShowRecommended] = useState(true);
-
-    // const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
-    // const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
 
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {

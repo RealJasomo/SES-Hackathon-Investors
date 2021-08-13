@@ -9,7 +9,8 @@ function StartupSearchPage() {
     const db = firebase.firestore(); // database
     const user = useFirebaseUser(); // custom hook to retrieve global user
     const recommendedStartups = useRecommendedStartups(); 
-    
+    const [showRecommended, setShowRecommeded] = useState(false); // initially, show the recommended list
+
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
     
@@ -44,7 +45,6 @@ function StartupSearchPage() {
     const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
 
 
-    const [showRecommended, setShowRecommeded] = useState(true); // initially, show the recommended list
 
     // useEffect hook that sets the default value of location based on the user's profile
     useEffect(() => {
@@ -64,55 +64,61 @@ function StartupSearchPage() {
                     }   
                     return;
                 }
-            })
+            });
+            setShowRecommeded(true);
         }
     }, [user]);
 
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
-       
-        // Startups retrieval
-        let arr: firebase.firestore.DocumentData[] = []; // temp array
-        db.collection("startups").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 startups stored in database
-            snapshot.forEach((doc) => {
-                if (doc.exists) { 
-                    let startup = doc.data();
-                    let validated = true;
-                    
-                    // Search query
-                    validated = validated && (search === "" || search.toLowerCase().includes(startup.name.toLowerCase()) || startup.name.toLowerCase().includes(search.toLowerCase()));
-                    
-                    // Search query in startup's tags
-                    validated = validated || (search === "" || (startup.tags !== undefined && startup.tags.includes(search.toLowerCase())));
+        // Update show recommended
+        if (search === "" && (tags === undefined || tags.length === 0) && country.code === "" && goalPercent === -1.0) {
+            setShowRecommeded(true);
+        }
+        else {
+            setShowRecommeded(false);
+            // Startups retrieval
+            let arr: firebase.firestore.DocumentData[] = []; // temp array
+            db.collection("startups").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 startups stored in database
+                snapshot.forEach((doc) => {
+                    if (doc.exists) { 
+                        let startup = doc.data();
+                        let validated = true;
+                        
+                        // Search query
+                        validated = validated && (search === "" || search.toLowerCase().includes(startup.name.toLowerCase()) || startup.name.toLowerCase().includes(search.toLowerCase()));
+                        
+                        // Search query in startup's tags
+                        validated = validated || (search === "" || (startup.tags !== undefined && startup.tags.includes(search.toLowerCase())));
 
-                    // Tag fields
-                    tags.map(tag => {
-                        validated = validated && (startup.tags !== undefined && startup.tags.includes(tag));
-                        return validated;
-                    });
-
-                    // Country
-                    validated = validated && (country.code === "" || country.code === startup.country);
-
-                    // Territory
-                    validated = validated && (territory.code === "" || territory.code === startup.state);
-
-                    // Percent Goal Reached
-                    validated = validated && (goalPercent < 0 || ((goalPercent - 0.25) < (startup.amountInvested / startup.goal) && (startup.amountInvested / startup.goal) <= goalPercent));
-
-                    if (validated) { // add startup to list to display
-                        arr.push({
-                            id: doc.id,
-                            ...startup
+                        // Tag fields
+                        tags.map(tag => {
+                            validated = validated && (startup.tags !== undefined && startup.tags.includes(tag));
+                            return validated;
                         });
+
+                        // Country
+                        validated = validated && (country.code === "" || country.code === startup.country);
+
+                        // Territory
+                        validated = validated && (territory.code === "" || territory.code === startup.state);
+
+                        // Percent Goal Reached
+                        validated = validated && (goalPercent < 0 || ((goalPercent - 0.25) < (startup.amountInvested / startup.goal) && (startup.amountInvested / startup.goal) <= goalPercent));
+
+                        if (validated) { // add startup to list to display
+                            arr.push({
+                                id: doc.id,
+                                ...startup
+                            });
+                        }
                     }
-                }
-              
+                
+                });
+                setStartups(arr);
+                //console.log(arr);
             });
-            setStartups(arr);
-            //console.log(arr);
-           
-        });
+        }
         
     }, [search, tags, country, territory, goalPercent]); // dependencies 
 
@@ -181,7 +187,7 @@ function StartupSearchPage() {
 
     // Handles whether to show recommended or not
     function handleRecommended() {
-        setShowRecommeded(false);
+       
     }
 
     return (
