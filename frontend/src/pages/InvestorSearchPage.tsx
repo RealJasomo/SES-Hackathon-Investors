@@ -10,14 +10,15 @@ function InvestorSearchPage() {
     const user = useFirebaseUser(); // custom hook to retrieve global user
     const recommendedInvestors = useRecommendedInvestors();
     const [showRecommended, setShowRecommended] = useState(false); // show the recommended list or not
-
+    //console.log("Rendered", recommendedInvestors)
+    
     const [investors, setInvestors] = useState<firebase.firestore.DocumentData[]>([]); // list of investors to display
     const [search, setSearch] = useState(""); // search query
 
     const emptyCountry = {code: "", name: "", states: [{name: "", code: ""}]}; // empty case
     const [defaultCountry, setDefaultCountry] = useState(emptyCountry); // default value
     const [country, setCountry] = useState(defaultCountry); // country location
-
+    
     const emptyTerritory = {code: "", name: ""}; // empty case
     const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
     const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
@@ -34,6 +35,7 @@ function InvestorSearchPage() {
         }
         return result;
     }
+
 
     // useEffect hook that sets the default value of location based on the user's profile
     useEffect(() => {
@@ -54,9 +56,8 @@ function InvestorSearchPage() {
                     }
                     return;
                 }
-            })
-            setShowRecommended(true);
-        }
+            });
+        }          
     }, [user])
 
     const tagOptions = ["tech", "knowledge", "business", "success", "money"]; // tag options available
@@ -65,55 +66,59 @@ function InvestorSearchPage() {
 
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
+        if (recommendedInvestors.length > 0 && search === "" && (tags === undefined || tags.length === 0) && country.code === "") {
+            setShowRecommended(true);
+        }
+        else {
+            setShowRecommended(false);
+            // Investors retrieval
+            let arr: firebase.firestore.DocumentData[] = []; // temp array
+                db.collection("users").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 users stored in database
+                snapshot.forEach((doc) => {
+                    if (doc.exists) {
+                        let user = doc.data();
+                        let validated = true;
 
-       // Investors retrieval
-       let arr: firebase.firestore.DocumentData[] = []; // temp array
-       db.collection("users").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 users stored in database
-           snapshot.forEach((doc) => {
-               if (doc.exists) {
-                   let user = doc.data();
-                   let validated = true;
+                        // If user is not an investor, set validated to false
+                        if(user.isInvestor === null || user.isInvestor === false) {
+                            validated = false;
+                        }
 
-                   // If user is not an investor, set validated to false
-                   if(user.isInvestor === null || user.isInvestor === false) {
-                     validated = false;
-                   }
+                        // Otherwise perform checks if user is an investor
+                        else {
+                            // Search query
+                            let name = user.firstName + user.lastName
+                            validated = validated && (search === "" || search.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(search.toLowerCase()));
 
-                   // Otherwise perform checks if user is an investor
-                   else {
-                     // Search query
-                     let name = user.firstName + user.lastName
-                     validated = validated && (search === "" || search.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(search.toLowerCase()));
+                            // Search query in user's tags
+                            validated = validated || (search === "" || (user.tags !== undefined && user.tags.includes(search.toLowerCase())));
 
-                     // Search query in user's tags
-                     validated = validated || (search === "" || (user.tags !== undefined && user.tags.includes(search.toLowerCase())));
+                            // Tag fields
+                            tags.map(tag => {
+                                validated = validated && (user.tags !== undefined && user.tags.includes(tag));
+                                return validated;
+                            });
 
-                     // Tag fields
-                     tags.map(tag => {
-                         validated = validated && (user.tags !== undefined && user.tags.includes(tag));
-                         return validated;
-                     });
+                            // Country
+                            validated = validated && (country.code === "" || country.code === user.country);
 
-                     // Country
-                     validated = validated && (country.code === "" || country.code === user.country);
-
-                     // Territory
-                     validated = validated && (territory.code === "" || territory.code === user.state);
-                   }
+                            // Territory
+                            validated = validated && (territory.code === "" || territory.code === user.state);
+                        }
 
 
-                   if (validated) { // add investor to list to display
-                       arr.push(user);
-                   }
-               }
+                        if (validated) { // add investor to list to display
+                            arr.push(user);
+                        }
+                    }
 
-           });
-           setInvestors(arr);
-           //console.log(arr);
+                });
+                setInvestors(arr);
+                //console.log(arr);
+                });
+        }
 
-       });
-
-    }, [search, tags, country, territory]); // dependencies
+    }, [search, tags, country, territory, recommendedInvestors.length]); // dependencies
 
 
     // Handles search query
@@ -126,7 +131,6 @@ function InvestorSearchPage() {
             setSearch("");
         }
         //console.log(query);
-        handleRecommended();
     }
 
     // Handles selection of tags to include/declude from search
@@ -141,7 +145,6 @@ function InvestorSearchPage() {
         }
         setTags(arr);
         //console.log(arr);
-        handleRecommended();
     }
 
     // Handles country selection
@@ -154,7 +157,6 @@ function InvestorSearchPage() {
             setCountry(JSON.parse(co));   
         }
         setTerritory(emptyTerritory); // reset the territory to avoid errors
-        handleRecommended();
     }
 
     function handleTerritories(e) {
@@ -166,11 +168,6 @@ function InvestorSearchPage() {
             setTerritory(JSON.parse(te));
             //console.log(JSON.parse(te));
         }
-        handleRecommended();
-    }
-
-    function handleRecommended() {
-        setShowRecommended(false);
     }
 
 
