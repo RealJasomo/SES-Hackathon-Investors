@@ -226,9 +226,12 @@ export function useInvestInStartup(value: number, id: string, increaseMode: bool
             userModify.balance -= value;
         }
         docData.amountInvested += value;
+        const {id: _, ...doc} = docData;
+        const {id: __, ...userDoc} = userModify;
+        userDoc.isInvestor = true;
         const result = await firebase.firestore().runTransaction(async transaction => {
-            await transaction.set(docRef, docData, { merge: true});
-            await transaction.set(userRef, userModify, { merge: true });
+            await transaction.set(docRef, doc, { merge: true});
+            await transaction.set(userRef, userDoc, { merge: true });
         }).then(() => true)
         .catch((error) =>{
             console.log(error);
