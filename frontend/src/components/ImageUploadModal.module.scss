@@ -1,16 +1,7 @@
-$primary: #150bd4;
+@use './modal' as *;
+
 .modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0 auto;
-  padding: 15px;
-  width: 70vw;
-  background-color: white;
-  box-shadow: 10px 10px 30px #666;
-  text-align: center;
-  border-radius: 25px;
+  @include modal;
   .button {
     margin-top: 30px;
     width: 50%;

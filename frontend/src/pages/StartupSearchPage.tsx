@@ -99,7 +99,10 @@ function StartupSearchPage() {
                     validated = validated && (goalPercent < 0 || ((goalPercent - 0.25) < (startup.amountInvested / startup.goal) && (startup.amountInvested / startup.goal) <= goalPercent));
 
                     if (validated) { // add startup to list to display
-                        arr.push(startup);
+                        arr.push({
+                            id: doc.id,
+                            ...startup
+                        });
                     }
                 }
               

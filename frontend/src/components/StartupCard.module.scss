@@ -17,4 +17,15 @@
     margin-top: auto;
     margin-bottom: 0.5rem;
   }
+  .investIncreaseButton,
+  .investButton {
+    background-color: $primary;
+    color: white;
+    border-radius: 15px;
+    padding: 0.5rem 1rem;
+    width: 10ch;
+  }
+  .investIncreaseButton {
+    width: 30ch;
+  }
 }

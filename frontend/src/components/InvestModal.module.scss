@@ -1,0 +1,15 @@
+@use './modal' as *;
+
+.investModal {
+  @include modal;
+  .investButton {
+    background-color: $primary;
+    color: white;
+    border-radius: 15px;
+    padding: 0.5rem 1rem;
+    width: 10ch;
+  }
+  .error {
+    color: lightcoral;
+  }
+}
