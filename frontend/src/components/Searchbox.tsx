@@ -14,6 +14,7 @@ export default function Searchbox(props: ISearchboxProps){
         variant="outlined" 
         value={props.value} 
         onChange={props.onChange}
+        fullWidth
         InputProps={{
            startAdornment: <Search/>
         }}/>);

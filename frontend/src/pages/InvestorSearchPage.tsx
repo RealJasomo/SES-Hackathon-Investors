@@ -6,6 +6,7 @@ import User from '@interfaces/User';
 import Searchbox from '@components/Searchbox';
 
 import styles from './Search.module.scss';
+import { Card, CardContent, CardHeader } from '@material-ui/core';
 
 function InvestorSearchPage() {
     const db = firebase.firestore(); // database
@@ -176,73 +177,76 @@ function InvestorSearchPage() {
 
     return (
         <div className={styles.search}>
-            <Searchbox value={search} onChange={handleSearch}/>
-            <div>
-                <h4>Tags:</h4>
-                {tagOptions.map((tag) => {
-                        return (
-                        <div>
-                            <label><input type="checkbox" id={tag} name={tag} onChange={handleTags}></input>{tag}</label>
-                        </div>
-                        )
-                    })
-                }
-
-                <h4>Location: </h4>
-                <label>Country:
-                    <select onChange={handleCountry}>
-                        <option value={"-"}>{"-"}</option>
-                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
-                        <hr></hr>
-                        {countriesList.countries.map((country, index) => {
-                            return (
-                                <option key={index} value={JSON.stringify(country)}>{country.name}</option>
-                            )
-                        })
+            <Card>
+                <CardHeader title="Find Investors"></CardHeader>
+                <CardContent>
+                    <Searchbox value={search} onChange={handleSearch}/>
+                    <div>
+                        <h4>Tags:</h4>
+                        {tagOptions.map((tag) => {
+                                return (
+                                <div>
+                                    <label><input type="checkbox" id={tag} name={tag} onChange={handleTags}></input>{tag}</label>
+                                </div>
+                                )
+                            })
                         }
-                    </select>
-                </label>
+
+                        <h4>Location: </h4>
+                        <label>Country:
+                            <select onChange={handleCountry}>
+                                <option value={"-"}>{"-"}</option>
+                                <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
+                                <hr></hr>
+                                {countriesList.countries.map((country, index) => {
+                                    return (
+                                        <option key={index} value={JSON.stringify(country)}>{country.name}</option>
+                                    )
+                                })
+                                }
+                            </select>
+                        </label>
 
 
-                {country.states !== null && country.code !== "" ? <label>State/Territory:
-                    <select onChange={handleTerritories}>
-                        {country.states.map((territory, index) => {
-                            let terr = countryContains(country, defaultTerritory);
-                            if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
-                                return (
-                                    <>
-                                        <option key={-1} value={"-"}>{"-"}</option>
-                                        <option key={index} value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option>
-                                        <hr></hr>
-                                        {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+                        {country.states !== null && country.code !== "" ? <label>State/Territory:
+                            <select onChange={handleTerritories}>
+                                {country.states.map((territory, index) => {
+                                    let terr = countryContains(country, defaultTerritory);
+                                    if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
+                                        return (
+                                            <>
+                                                <option key={-1} value={"-"}>{"-"}</option>
+                                                <option key={index} value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option>
+                                                <hr></hr>
+                                                {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
 
-                                    </>
-                                )
-                            }
-                            else if (index === 0) { // otherwise place the "-" option
-                                return (
-                                    <>
-                                        <option key={-1} value={"-"}>{"-"}</option>
-                                        <hr></hr>
-                                        {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
-                                    </>
-                                )
-                            }
-                            else { // all other cases place the current territory in the list
-                                return (
-                                    <option key={index} value={JSON.stringify(territory)}>{territory.name}</option>
-                                )
-                            }
-                        })}
-                    </select>
-                </label>
-                : <></>
-                }
+                                            </>
+                                        )
+                                    }
+                                    else if (index === 0) { // otherwise place the "-" option
+                                        return (
+                                            <>
+                                                <option key={-1} value={"-"}>{"-"}</option>
+                                                <hr></hr>
+                                                {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+                                            </>
+                                        )
+                                    }
+                                    else { // all other cases place the current territory in the list
+                                        return (
+                                            <option key={index} value={JSON.stringify(territory)}>{territory.name}</option>
+                                        )
+                                    }
+                                })}
+                            </select>
+                        </label>
+                        : <></>
+                        }
 
-            </div>
-
-            <hr></hr>
-
+                    </div>
+                </CardContent>
+            </Card>
+            <br></br>
             {showRecommended ?
                 <div>
                     <h2>Recommended Investors: </h2>

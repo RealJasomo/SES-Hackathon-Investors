@@ -6,6 +6,12 @@ import Startup from '@interfaces/Startup';
 import Searchbox from '@components/Searchbox';
 
 import styles from './Search.module.scss';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Card from '@material-ui/core/Card';
+import { CardContent, CardHeader } from '@material-ui/core';
+
 
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
@@ -182,7 +188,11 @@ function StartupSearchPage() {
     }
 
     return (
-        <div className={styles.search}>           
+        <div className={styles.search}>    
+
+            <Card>
+                <CardHeader title="Find Startups"></CardHeader>
+                <CardContent>
                 <Searchbox value={search} onChange={handleSearch}/>
                 <div>
                     <h4>Tags:</h4>
@@ -263,8 +273,9 @@ function StartupSearchPage() {
                         }
                     </div>
                 </div>
-          
-            <hr></hr>
+            </CardContent>
+        </Card>    
+           <br></br>
 
             {showRecommended ? 
                 <div>
