@@ -2,7 +2,7 @@
 Official submission for the 2021 Capital One Software Engineering Summit Hack-a-thon
 ## Members
 
-- Anuva Banwasi
+- [Anuva Banwasi](https://www.linkedin.com/in/anuva-banwasi-941617212/)
 - [Arjav Patel](https://www.linkedin.com/in/arjavpa/)
 - [Jason Cramer](https://www.linkedin.com/in/jason-cramer-617881190/)
 - [Pranay Yadav](https://www.linkedin.com/in/pranayyadav/)
