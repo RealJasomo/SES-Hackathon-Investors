@@ -3,6 +3,7 @@ import firebase, { useFirebaseUser, useRecommendedInvestors } from '@fire';
 import countriesList from '../res/countries.json';
 import UserCard from '@components/UserCard';
 import User from '@interfaces/User';
+import Searchbox from '@components/Searchbox';
 
 import styles from './Search.module.scss';
 
@@ -175,9 +176,7 @@ function InvestorSearchPage() {
 
     return (
         <div className={styles.search}>
-            <label>Search:
-                <input onChange={handleSearch}></input>
-            </label>
+            <Searchbox value={search} onChange={handleSearch}/>
             <div>
                 <h4>Tags:</h4>
                 {tagOptions.map((tag) => {
