@@ -1,0 +1,49 @@
+@use './modal' as *;
+
+.createStartup {
+  @include modal;
+  .content {
+    text-align: left;
+    width: 100%;
+    .label {
+      margin-top: 1rem;
+    }
+    .contentHead {
+      display: flex;
+      .avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $primary;
+        width: 4em;
+        height: 4em;
+        margin-right: 1rem;
+        border-radius: 50%;
+        text-align: center;
+        color: #ffffff;
+        border: 3px solid #d8d8d8;
+        cursor: pointer;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .name {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+      }
+    }
+    .submit {
+      .submitButton {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: $primary;
+        color: #ffffff;
+        border-radius: 15px;
+        float: right;
+      }
+    }
+  }
+}

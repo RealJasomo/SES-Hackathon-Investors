@@ -1,6 +1,6 @@
 $gray: #ececf3;
 $darkgray: #9e9e9f;
-$primary: #0B4578;
+$primary: #0b4578;
 .sideNav {
   background-color: white;
   display: flex;
@@ -67,6 +67,24 @@ $primary: #0B4578;
     }
     .icon {
       color: $primary;
+    }
+  }
+}
+.addStartupArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .addStartupButton {
+    color: #ffffff;
+    background-color: $primary;
+    padding: 0.25rem 1rem;
+    font-weight: 500;
+    border-radius: 15px;
+    font-size: 1.25rem;
+    margin-block: 1rem;
+    &::before {
+      content: "+";
+      margin-right: 1rem;
     }
   }
 }

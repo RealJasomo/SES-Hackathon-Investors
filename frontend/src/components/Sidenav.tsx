@@ -6,12 +6,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { ReactComponent as Logo } from '@res/logo.svg';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ForumIcon from '@material-ui/icons/Forum';
-import styles from './Sidenav.module.scss';
 import Settings from '@material-ui/icons/Settings';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import BusinessIcon from '@material-ui/icons/Business';
 import { Avatar } from '@material-ui/core';
 import { capitalize } from '@util/utils';
+import CreateStartupModal from './CreateStartupModal';
+
+import styles from './Sidenav.module.scss';
 
 type SideNavLink = Omit<ISidenavItemProps, 'active'>;
 const sideNavLinks: SideNavLink[] = [{
@@ -39,6 +41,8 @@ const sideNavLinks: SideNavLink[] = [{
 export default function Sidenav(){
     const [active, setActive] = useState<number>(0);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [createStartupOpen, setCreateStartupOpen] = useState<boolean>(false);
+
     const user = useFirebaseUser();
     const history = useHistory();
     const avatarRef = useRef(null);
@@ -89,6 +93,10 @@ export default function Sidenav(){
         </div>
         <div className={styles.navLinks}>
             {sideNavLinks.map((link, idx) => <SidenavItem key={idx} {...link} active={active===idx}/>)}
+        </div>
+        <div className={styles.addStartupArea}>
+            <CreateStartupModal open={createStartupOpen} onClose={() => setCreateStartupOpen(false)}/>
+            <button onClick={() => setCreateStartupOpen(true)} className={styles.addStartupButton}>Add Startup</button>
         </div>
     </div>);
 }
