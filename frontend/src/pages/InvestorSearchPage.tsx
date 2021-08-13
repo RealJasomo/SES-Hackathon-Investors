@@ -11,14 +11,14 @@ function InvestorSearchPage() {
     const recommendedInvestors = useRecommendedInvestors();
     const [showRecommended, setShowRecommended] = useState(false); // show the recommended list or not
     //console.log("Rendered", recommendedInvestors)
-    
+
     const [investors, setInvestors] = useState<firebase.firestore.DocumentData[]>([]); // list of investors to display
-    const [search, setSearch] = useState(""); // search query
+    var [search, setSearch] = useState(""); // search query
 
     const emptyCountry = {code: "", name: "", states: [{name: "", code: ""}]}; // empty case
     const [defaultCountry, setDefaultCountry] = useState(emptyCountry); // default value
     const [country, setCountry] = useState(defaultCountry); // country location
-    
+
     const emptyTerritory = {code: "", name: ""}; // empty case
     const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
     const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
@@ -57,7 +57,7 @@ function InvestorSearchPage() {
                     return;
                 }
             });
-        }          
+        }
     }, [user])
 
     const tagOptions = ["tech", "knowledge", "business", "success", "money"]; // tag options available
@@ -88,6 +88,7 @@ function InvestorSearchPage() {
                         else {
                             // Search query
                             let name = user.firstName + user.lastName
+                            search = search.split(" ").join("");
                             validated = validated && (search === "" || search.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(search.toLowerCase()));
 
                             // Search query in user's tags
@@ -154,7 +155,7 @@ function InvestorSearchPage() {
             setCountry(emptyCountry);
         }
         else {
-            setCountry(JSON.parse(co));   
+            setCountry(JSON.parse(co));
         }
         setTerritory(emptyTerritory); // reset the territory to avoid errors
     }
@@ -243,7 +244,7 @@ function InvestorSearchPage() {
 
             <hr></hr>
 
-            {showRecommended ? 
+            {showRecommended ?
                 <div>
                     <h2>Recommended Investors: </h2>
                     {recommendedInvestors.map((investor, index) => {
@@ -255,7 +256,7 @@ function InvestorSearchPage() {
                     })
 
                     }
-                </div> 
+                </div>
                 :
                 <div>
                     <h2>Investors: </h2>
@@ -267,7 +268,7 @@ function InvestorSearchPage() {
                         )
                     })}
                 </div>
-            }   
+            }
 
         </div>
     )
