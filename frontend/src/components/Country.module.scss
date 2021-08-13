@@ -7,6 +7,8 @@ $darkgray: #9e9e9f;
     flex-grow: 1;
   }
   .location {
+    display: flex;
+    align-items: center;
     background-color: $gray;
     border-radius: 5px;
     padding: 0.25rem 1rem;
