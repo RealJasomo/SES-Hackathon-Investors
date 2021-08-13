@@ -5,6 +5,7 @@ import Tags from '@components/Tags';
 import { useInvestments, useStartups } from '@fire';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import InvestModal from './InvestModal';
+import Country from './Country';
 
 import styles from './StartupCard.module.scss';
 
@@ -44,6 +45,7 @@ export default function StartupCard(props: IStartupCardProps){
             increaseMode/>
         <h1 className={styles.header}><Avatar className={styles.avatar} src={props.startup.logo} alt="startup logo"/>{props.startup.name}</h1>
         <p className={styles.description}>{props.startup.description}</p>
+        <Country country={props.startup.country} state={props.startup.state}/>
         <Tags tags={props.startup.tags}/>
         <div className={styles.goal}>
             <p> Raised ${props.startup.amountInvested.toLocaleString()} / ${props.startup.goal.toLocaleString()}</p>

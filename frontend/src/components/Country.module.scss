@@ -1,0 +1,19 @@
+$gray: #ececf3;
+$darkgray: #9e9e9f;
+.country {
+  display: flex;
+  margin-block: 0.5rem;
+  .label {
+    flex-grow: 1;
+  }
+  .location {
+    background-color: $gray;
+    border-radius: 5px;
+    padding: 0.25rem 1rem;
+    margin: 0 0.5rem;
+  }
+  .pin {
+    color: $darkgray;
+    font-size: 1em;
+  }
+}
