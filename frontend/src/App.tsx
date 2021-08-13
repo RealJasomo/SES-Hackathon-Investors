@@ -38,14 +38,21 @@ function App() {
               <Route path="/signup">
                 <Pages.SignupPage />
               </Route>
-              <Route exact path={['/dashboard', '/investments', '/startups', '/messages', '/search', '/settings']}>
-                <Sidenav/>
-              </Route>
-              <Route path="/search/startups">
-                <Pages.StartupSearchPage/>
-              </Route>
-              <Route path="/search/investors">
-                <Pages.InvestorSearchPage/>
+              <Route exact path={['/dashboard', '/messages', '/search/startups','/search/investors', '/settings']}>
+                <div className="interface">
+                  <Sidenav/>
+                  <Switch>
+                    <Route path="/dashboard">
+                      <Pages.Dashboard />
+                    </Route>
+                    <Route path="/search/startups">
+                      <Pages.StartupSearchPage/>
+                    </Route>
+                    <Route path="/search/investors">
+                      <Pages.InvestorSearchPage/>
+                    </Route>
+                  </Switch>
+                </div>
               </Route>
             </React.Suspense>
           </Switch>

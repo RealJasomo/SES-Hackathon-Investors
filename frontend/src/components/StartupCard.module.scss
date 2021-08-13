@@ -1,0 +1,5 @@
+@use './card' as *;
+
+.startupCard {
+  @include card;
+}

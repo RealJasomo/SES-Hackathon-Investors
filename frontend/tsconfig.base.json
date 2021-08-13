@@ -28,7 +28,8 @@
       "@res/*": ["res/*"],
       "@components/*": ["components/*"],
       "@interfaces/*": ["interfaces/*"],
-      "@hoc/*": ["hoc/*"]
+      "@hoc/*": ["hoc/*"],
+      "@util/*": ["util/*"]
     }
   },
   "include": [
