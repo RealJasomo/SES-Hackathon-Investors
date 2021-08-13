@@ -1,12 +1,12 @@
 # SES Hackathon *LaunchPad*: Take your startup to the moon!
-
+Official submission for the 2021 Capital One Software Engineering Summit Hack-a-thon
 ## Members
 
-- Anuva
-- Arjav
-- Jason
-- Pranay
-- Sam
+- [Anuva Banwasi](https://www.linkedin.com/in/anuva-banwasi-941617212/)
+- [Arjav Patel](https://www.linkedin.com/in/arjavpa/)
+- [Jason Cramer](https://www.linkedin.com/in/jason-cramer-617881190/)
+- [Pranay Yadav](https://www.linkedin.com/in/pranayyadav/)
+- [Sam Dominguez](https://www.linkedin.com/in/samueljdominguez/)
 
 ## Description
 
@@ -22,4 +22,5 @@ Our web application's goal is to provide a simple platform to connect investors 
 
 - React
 - Firebase
+- Vercel
 
