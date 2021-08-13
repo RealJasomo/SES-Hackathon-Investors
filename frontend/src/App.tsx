@@ -51,6 +51,9 @@ function App() {
                     <Route path="/search/investors">
                       <Pages.InvestorSearchPage/>
                     </Route>
+                    <Route path="/settings">
+                      <Pages.SettingsPage/>
+                    </Route>
                   </Switch>
                 </div>
               </Route>
