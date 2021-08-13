@@ -17,7 +17,7 @@ export default function StartupCard(props: IStartupCardProps){
         <p className={styles.description}>{props.startup.description}</p>
         <Tags tags={props.startup.tags}/>
         <div className={styles.goal}>
-            <p> raised ${props.startup.amountInvested.toLocaleString()} / goal $ {props.startup.goal.toLocaleString()}</p>
+            <p> Raised ${props.startup.amountInvested.toLocaleString()} / ${props.startup.goal.toLocaleString()}</p>
             <LinearProgress variant="determinate" value={Math.round(100*(props.startup.amountInvested / props.startup.goal))}/>
         </div>
     </div>)
