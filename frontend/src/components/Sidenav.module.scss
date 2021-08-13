@@ -29,9 +29,12 @@ $primary: #150bd4;
   }
   .profile {
     padding: 0.5rem;
+    margin-block: 1rem;
     display: flex;
     .avatar {
       cursor: pointer;
+      padding: 0.25rem;
+      border: 3px solid $darkgray;
     }
     .info {
       margin-left: 0.5rem;
