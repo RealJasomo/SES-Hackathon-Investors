@@ -3,12 +3,12 @@ import { useHistory } from 'react-router-dom';
 import firebase, { useFirebaseUser } from '@fire';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { capitalize } from '@util/utils';
 
 import { ReactComponent as Logo } from '@res/logo.svg';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ForumIcon from '@material-ui/icons/Forum';
 import styles from './Sidenav.module.scss';
-import Search from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/Settings';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import BusinessIcon from '@material-ui/icons/Business';
@@ -84,7 +84,7 @@ export default function Sidenav(){
                 <MenuItem onClick={handleSignout}>Sign Out</MenuItem>
             </Menu>
             <div className={styles.info}>
-                <p>{user?.firstName ?? 'First Name'}, {user?.lastName ?? 'Last Name'}</p>
+                <p>{capitalize(user?.firstName ?? 'First Name')}, {capitalize(user?.lastName ?? 'Last Name')}</p>
                 <p>$ {user?.balance?.toLocaleString() ?? '0'}</p>
             </div>
         </div>

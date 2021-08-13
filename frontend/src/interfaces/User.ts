@@ -1,6 +1,7 @@
 import firebase from '@fire';
 
 export default interface User {
+    id: string, 
     bio: string,
     country: string,
     email: string,

@@ -1,6 +1,7 @@
 import firebase from '@fire';
 
 export default interface Startup{
+    id: string,
     amountInvested: number,
     country: string,
     description: string,
