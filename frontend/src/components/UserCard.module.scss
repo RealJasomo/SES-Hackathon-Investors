@@ -1,0 +1,10 @@
+@use './card' as *;
+
+.userCard {
+  @include card;
+  width: 14rem;
+  height: 14rem;
+  .bio {
+    text-overflow: ellipsis;
+  }
+}

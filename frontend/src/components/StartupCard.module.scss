@@ -1,0 +1,19 @@
+@use './card' as *;
+
+.startupCard {
+  @include card;
+  .header {
+    display: flex;
+    .avatar {
+      margin-right: 1rem;
+    }
+  }
+  .description {
+    margin-block: 1rem;
+  }
+
+  .goal {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+  }
+}

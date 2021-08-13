@@ -1,0 +1,12 @@
+$gray: #ececf3;
+$darkgray: #9e9e9f;
+$primary: #150bd4;
+@mixin card {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  justify-content: center;
+  border: 3px solid $darkgray;
+  border-radius: 15px;
+}

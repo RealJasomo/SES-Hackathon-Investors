@@ -1,0 +1,14 @@
+.dashboard {
+  padding: 1rem;
+  .sectionHeading {
+    margin-block: 1rem;
+    font-weight: 300;
+  }
+  .mySection {
+    .tab {
+      display: flex;
+      height: 15rem;
+      width: 100%;
+    }
+  }
+}

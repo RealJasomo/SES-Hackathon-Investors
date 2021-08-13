@@ -20,17 +20,13 @@ const sideNavLinks: SideNavLink[] = [{
     name: 'Dashboard',
     link: '/dashboard',
 },{
-    icon: <Search className={styles.icon}/>,
-    name: 'Search',
-    link: '/search',
-},{
     icon: <ShowChartIcon className={styles.icon}/>,
-    name: 'Investments',
-    link: '/investments',
+    name: 'Investors',
+    link: '/search/investors',
 },{
     icon: <BusinessIcon className={styles.icon}/>,
     name: 'Startups',
-    link: '/startups',
+    link: '/search/startups',
 },{
     icon: <ForumIcon className={styles.icon}/>,
     name: 'Messages',

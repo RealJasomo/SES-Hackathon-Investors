@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import User from '@interfaces/User';
+import Startup from '@interfaces/Startup';
 import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/storage';
@@ -34,6 +35,52 @@ export function useFirebaseUser(): User | null {
     }, [auth.user]);
     
     return user;
+}
+
+export function useInvestiments(): Startup[]{
+    const user = useFirebaseUser();
+    const [startups, setStartups] = useState<Startup[]>([]);
+    useEffect(() => {
+        if(user){
+            const startups = user.investedStartups?.map(async (startupRef) => {
+                return (await startupRef.get()).data() as Startup;
+            });
+            Promise.all(startups ?? []).then(startups => setStartups(startups));
+        }
+    }, [user]);
+    return startups;
+}
+
+export function useInvestors(): User[] {
+    const startups = useStartups();
+    const [investors, setInvenstors]= useState<User[]>([]);
+    useEffect(() => {
+        if(startups.length != 0){
+            const investors = startups.map(startup => startup.investors?.map(async investor => {
+                return (await investor.get()).data() as User;
+            })).reduce((a, c) => {
+                return [...a, ...c]
+            }, []);
+            Promise.all(investors).then(users => setInvenstors(users));
+        }
+    }, [startups]);
+    return investors;
+}
+
+export function useStartups(): Startup[]{
+    const user = useFirebaseUser();
+    const [startups, setStartups] = useState<Startup[]>([]);
+    
+    useEffect(() => {
+        if(user){
+            const startups = user.ownedStartups?.map(async (startupRef) => {
+                return (await startupRef.get()).data() as Startup;
+            });
+            Promise.all(startups ?? []).then(startups => setStartups(startups));
+        }
+    }, [user]);
+
+    return startups;
 }
 
 export default firebase;
