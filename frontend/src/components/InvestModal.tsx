@@ -10,6 +10,7 @@ interface IInvestModalProps{
    onClose: () => void,
    startupId: string,
    startupName: string,
+   increaseMode?: boolean
 }
 
 export default function InvestModal(props: IInvestModalProps)
@@ -17,7 +18,7 @@ export default function InvestModal(props: IInvestModalProps)
     const [value, setValue] = useState<number>(0);
     const [error, setError] = useState<string>('');
     const user = useFirebaseUser();
-    const execute = useInvestInStartup(value, props.startupId);
+    const execute = useInvestInStartup(value, props.startupId, !!props.increaseMode);
     return (
     <Modal
         open={props.open}

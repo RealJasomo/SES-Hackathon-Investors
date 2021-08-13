@@ -96,7 +96,7 @@ export function useStartups(): Startup[]{
     return startups;
 }
 
-export function useInvestInStartup(value: number, id: string): () => Promise<boolean>{
+export function useInvestInStartup(value: number, id: string, increaseMode: boolean): () => Promise<boolean>{
     const user = useFirebaseUser();
 
     const execute = async () => {
@@ -110,18 +110,20 @@ export function useInvestInStartup(value: number, id: string): () => Promise<boo
              id,
            ...(await docRef.get()).data(),
         }) as Startup;
-        if(!userModify.investedStartups){
-            userModify.investedStartups = [];
+        if(!increaseMode){
+            if(!userModify.investedStartups){
+                userModify.investedStartups = [];
+            }
+            userModify.investedStartups.push(docRef);
+            if(!docData.investors){
+                docData.investors = [];
+            }
+            docData.investors.push(userRef);
         }
-        userModify.investedStartups.push(docRef);
         if(userModify.balance){
             userModify.balance -= value;
         }
         docData.amountInvested += value;
-        if(!docData.investors){
-            docData.investors = [];
-        }
-        docData.investors.push(userRef);
         const result = await firebase.firestore().runTransaction(async transaction => {
             await transaction.set(docRef, docData, { merge: true});
             await transaction.set(userRef, userModify, { merge: true });
