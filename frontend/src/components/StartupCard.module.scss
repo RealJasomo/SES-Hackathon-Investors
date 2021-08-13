@@ -2,6 +2,7 @@
 
 .startupCard {
   @include card;
+  padding: 1rem;
   .header {
     display: flex;
     .avatar {
