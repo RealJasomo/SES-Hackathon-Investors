@@ -4,6 +4,7 @@ import countriesList from '../res/countries.json';
 import StartupCard from '@components/StartupCard';
 import Startup from '@interfaces/Startup';
 
+import styles from './Search.module.scss';
 
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
@@ -180,9 +181,7 @@ function StartupSearchPage() {
     }
 
     return (
-        <div>
-            <h1>Search for Startups</h1>
-           
+        <div className={styles.search}>           
                 <label>Search:
                     <input onChange={handleSearch}></input>
                 </label>

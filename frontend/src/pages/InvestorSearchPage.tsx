@@ -4,6 +4,7 @@ import countriesList from '../res/countries.json';
 import UserCard from '@components/UserCard';
 import User from '@interfaces/User';
 
+import styles from './Search.module.scss';
 
 function InvestorSearchPage() {
     const db = firebase.firestore(); // database
@@ -173,8 +174,7 @@ function InvestorSearchPage() {
 
 
     return (
-        <div>
-            <h1>Find your Next Investor</h1>
+        <div className={styles.search}>
             <label>Search:
                 <input onChange={handleSearch}></input>
             </label>
