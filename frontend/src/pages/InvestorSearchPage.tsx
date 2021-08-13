@@ -71,48 +71,52 @@ function InvestorSearchPage() {
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
 
-        // Investors retrieval
-        let arr: firebase.firestore.DocumentData[] = []; // temp array
-        db.collection("users").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 users stored in database
-            snapshot.forEach((doc) => {
-                if (doc.exists) {
-                    let investor = doc.data();
-                    let validated = true;
+       // Investors retrieval
+       let arr: firebase.firestore.DocumentData[] = []; // temp array
+       db.collection("users").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 users stored in database
+           snapshot.forEach((doc) => {
+               if (doc.exists) {
+                   let user = doc.data();
+                   let validated = true;
 
-                    // Search query
-                    validated = validated && (search === "" || search.toLowerCase().includes(investor.firstName.toLowerCase()) || investor.lastName.toLowerCase().includes(search.toLowerCase()));
+                   // If user is not an investor, set validated to false
+                   if(user.investedStartups == undefined || user.investedStartups.length == 0) {
+                     validated = false;
+                   }
 
-                    // Search query in investor's tags
-                    validated = validated || (search === "" || (investor.tags !== undefined && investor.tags.includes(search.toLowerCase())));
+                   // Otherwise perform checks if user is an investor
+                   else {
+                     // Search query
+                     let name = user.firstName + user.lastName
+                     validated = validated && (search === "" || search.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(search.toLowerCase()));
 
-                    // Tag fields
-                    tags.map(tag => {
-                        validated = validated && (investor.tags !== undefined && investor.tags.includes(tag));
-                        return validated;
-                    });
+                     // Search query in user's tags
+                     validated = validated || (search === "" || (user.tags !== undefined && user.tags.includes(search.toLowerCase())));
 
-                    // Country
-                    validated = validated && (country.code === "" || country.code === investor.country);
+                     // Tag fields
+                     tags.map(tag => {
+                         validated = validated && (user.tags !== undefined && user.tags.includes(tag));
+                         return validated;
+                     });
 
-                    // Territory
-                    validated = validated && (territory.code === "" || territory.code === investor.state);
+                     // Country
+                     validated = validated && (country.code === "" || country.code === user.country);
 
-                    // Check that investor is an investor
-                    validated = validated && (investor.investedStartups != undefined && investor.investedStartups.length !== 0);
+                     // Territory
+                     validated = validated && (territory.code === "" || territory.code === user.state);
+                   }
 
-                    // Check that the investor is not the signed in investor
-                    validated = validated && (investor === null || (investor.email !== user?.email));
 
-                    if (validated) { // add investor to list to display
-                        arr.push(investor);
-                    }
-                }
+                   if (validated) { // add investor to list to display
+                       arr.push(user);
+                   }
+               }
 
-            });
-            setInvestors(arr);
-            //console.log(arr);
+           });
+           setInvestors(arr);
+           //console.log(arr);
 
-        });
+       });
 
     }, [search, tags, country, territory]); // dependencies
 
