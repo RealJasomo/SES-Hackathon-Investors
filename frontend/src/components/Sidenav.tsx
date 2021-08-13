@@ -83,8 +83,8 @@ export default function Sidenav(){
                 <MenuItem onClick={handleSignout}>Sign Out</MenuItem>
             </Menu>
             <div className={styles.info}>
-                <p>{capitalize(user?.firstName ?? 'First Name')}, {capitalize(user?.lastName ?? 'Last Name')}</p>
-                <p>$ {user?.balance?.toLocaleString() ?? '0'}</p>
+                <p>{capitalize(user?.firstName ?? 'First Name')} {capitalize(user?.lastName ?? 'Last Name')}</p>
+                <p>${user?.balance?.toLocaleString() ?? '0'}</p>
             </div>
         </div>
         <div className={styles.navLinks}>

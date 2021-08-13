@@ -41,7 +41,7 @@ function StartupSearchPage() {
     const tagOptions = ["dog", "tail", "tech", "marketing"]; // tag options available
     const [tags, setTags] = useState<String[]>([]); // tags query
 
-    const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
+    const [goalPercent, setGoalPercent] = useState<number>(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
     const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
 
 
@@ -67,7 +67,7 @@ function StartupSearchPage() {
             });
         }
     }, [user]);
-
+    console.log(goalPercent)
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
         // Update show recommended
@@ -150,7 +150,7 @@ function StartupSearchPage() {
 
     function handleGoalPercent(e) {
         let val = e.target.value;
-        setGoalPercent(val);
+        setGoalPercent(Number(val));
         //console.log(val)
     }
 
