@@ -13,6 +13,7 @@ import Settings from '@material-ui/icons/Settings';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import BusinessIcon from '@material-ui/icons/Business';
 import { Avatar } from '@material-ui/core';
+import { capitalize } from '@util/utils';
 
 type SideNavLink = Omit<ISidenavItemProps, 'active'>;
 const sideNavLinks: SideNavLink[] = [{
@@ -84,7 +85,7 @@ export default function Sidenav(){
                 <MenuItem onClick={handleSignout}>Sign Out</MenuItem>
             </Menu>
             <div className={styles.info}>
-                <p>{user?.firstName ?? 'First Name'}, {user?.lastName ?? 'Last Name'}</p>
+                <p>{capitalize(user?.firstName.toLowerCase()) ?? 'First Name'}, {capitalize(user?.lastName) ?? 'Last Name'}</p>
                 <p>$ {user?.balance?.toLocaleString() ?? '0'}</p>
             </div>
         </div>

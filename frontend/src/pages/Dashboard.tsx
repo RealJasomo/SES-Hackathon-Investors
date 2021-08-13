@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import withAuthentication from '@hoc/withAuthentication';
-import { useFirebaseUser, useInvestiments, useInvestors, useStartups } from '@fire';
+import { useFirebaseUser, useInvestments, useInvestors, useStartups } from '@fire';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import UserCard from '@components/UserCard';
@@ -15,7 +15,7 @@ const tabs: string[] = ["My Investors", "My Startups", "My Investiments"];
 function Dashboard(){
     const [activeTab, setActiveTab] = useState<number>(0);
     const user = useFirebaseUser();
-    const investments = useInvestiments();
+    const investments = useInvestments();
     const investors = useInvestors();
     const startups = useStartups();
 

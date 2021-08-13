@@ -16,6 +16,6 @@ export default function UserCard(props: IUserCardProps) {
         <Avatar className={styles.avatar} src={props.user?.profilePhoto} alt="profile photo" />
         <p className={styles.name}>Name: {capitalize(props.user?.firstName ?? '')} {capitalize(props.user?.lastName ?? '')}</p>
         <p className={styles.bio}>Bio: {props.user?.bio}</p>
-        <p className={styles.balance}>Balance: $ {props.user?.balance?.toLocaleString() ?? '0'}</p>
+        <p className={styles.balance}>Balance: ${props.user?.balance?.toLocaleString() ?? '0'}</p>
     </div>);
 }

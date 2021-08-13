@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import firebase, { useFirebaseUser } from '@fire';
 import countriesList from '../res/countries.json';
+import StartupCard from '@components/StartupCard';
+import Startup from '@interfaces/Startup';
 
 
 function StartupSearchPage() {
@@ -51,9 +53,7 @@ function StartupSearchPage() {
                                 setTerritory(terr);
                                 setDefaultTerritory(terr);
                             }
-                        
                     }   
-                    
                     return
                 }
             })
@@ -210,7 +210,7 @@ function StartupSearchPage() {
                 </label>
                
                 
-                {country.states !== null ? <label>State/Territory:
+                {country.states !== null && country.code !== "" ? <label>State/Territory:
                     <select onChange={handleTerritories}>
                         {country.states.map((territory, index) => {
                             let terr = countryContains(country, defaultTerritory);
@@ -268,7 +268,7 @@ function StartupSearchPage() {
                 {startups.map((startup) => {
                     return (
                         <div>
-                            <h4>{startup.name + " | $" + startup.amountInvested + "/$" + startup.goal + " (" + (Math.trunc(startup.amountInvested * 100 / startup.goal)) + "%) raised!"}</h4> 
+                            <StartupCard startup={startup as Startup}/> 
                             
                         </div>
                     )
