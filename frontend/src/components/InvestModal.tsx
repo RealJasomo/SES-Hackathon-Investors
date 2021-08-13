@@ -36,7 +36,10 @@ export default function InvestModal(props: IInvestModalProps)
                     />
                 <button onClick={async () => {
                     if(await execute()){
+                        setError('');
                         props.onClose();
+                    }else{
+                        setError('Could not invest!');
                     }
                 }} className={styles.investButton}>Invest</button>
             </>: <h1>Sorry, you do not have enough money to invest!</h1>}
