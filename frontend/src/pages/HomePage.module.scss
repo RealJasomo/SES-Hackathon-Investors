@@ -4,4 +4,10 @@ $primary: #150bd4;
 
 .home {
   @include page;
+  height: max-content;
+  background-color: #5882c1;
+  img {
+    width: 100vw;
+    height: auto;
+  }
 }
