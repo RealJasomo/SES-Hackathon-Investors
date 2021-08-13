@@ -9,7 +9,7 @@ function StartupSearchPage() {
     const db = firebase.firestore(); // database
     const user = useFirebaseUser(); // custom hook to retrieve global user
     const recommendedStartups = useRecommendedStartups(); 
-    const [showRecommended, setShowRecommeded] = useState(false); // initially, show the recommended list
+    const [showRecommended, setShowRecommended] = useState(false); // initially, show the recommended list
 
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
@@ -65,18 +65,17 @@ function StartupSearchPage() {
                     return;
                 }
             });
-            setShowRecommeded(true);
         }
     }, [user]);
 
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
         // Update show recommended
-        if (search === "" && (tags === undefined || tags.length === 0) && country.code === "" && goalPercent === -1.0) {
-            setShowRecommeded(true);
+        if (recommendedStartups.length > 0 && search === "" && (tags === undefined || tags.length === 0) && country.code === "" && goalPercent === -1.0) {
+            setShowRecommended(true);
         }
         else {
-            setShowRecommeded(false);
+            setShowRecommended(false);
             // Startups retrieval
             let arr: firebase.firestore.DocumentData[] = []; // temp array
             db.collection("startups").limit(100).onSnapshot((snapshot) => { // retrieve the first 100 startups stored in database
@@ -120,7 +119,7 @@ function StartupSearchPage() {
             });
         }
         
-    }, [search, tags, country, territory, goalPercent]); // dependencies 
+    }, [search, tags, country, territory, goalPercent, recommendedStartups.length]); // dependencies 
 
 
     // Handles search query
@@ -133,7 +132,6 @@ function StartupSearchPage() {
             setSearch("");
         }
         //console.log(query);
-        handleRecommended();
     }
 
     // Handles selection of tags to include/declude from search
@@ -148,14 +146,12 @@ function StartupSearchPage() {
         }
         setTags(arr);
         //console.log(arr);
-        handleRecommended();
     }
 
     function handleGoalPercent(e) {
         let val = e.target.value;
         setGoalPercent(val);
         //console.log(val)
-        handleRecommended();
     }
 
     // Handles country selection
@@ -169,7 +165,6 @@ function StartupSearchPage() {
             setCountry(JSON.parse(co));         
         }
         setTerritory(emptyTerritory); // reset the territory to avoid errors
-        handleRecommended();
     }
 
     // Handles territory/state selection
@@ -182,12 +177,6 @@ function StartupSearchPage() {
             setTerritory(JSON.parse(te));
             //console.log(JSON.parse(te));
         }
-        handleRecommended();
-    }
-
-    // Handles whether to show recommended or not
-    function handleRecommended() {
-       
     }
 
     return (

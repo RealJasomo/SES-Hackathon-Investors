@@ -142,7 +142,7 @@ export function useRecommendedStartups() : Startup[] {
                              ...startup 
                             }as Startup);
                     }
-                })
+                });
                 setRecommendedStartups(arr);
             });
         }
@@ -154,7 +154,7 @@ export function useRecommendedStartups() : Startup[] {
 
 export function useRecommendedInvestors() : User[] {
     const user = useFirebaseUser();
-    const [recommendedInvestors, setRecommendedInvestors] = useState<User[]>([])
+    const [recommendedInvestors, setRecommendedInvestors] = useState<User[]>([]);
     const db = firebase.firestore();
     
     // logic to select default recommendations
@@ -195,12 +195,11 @@ export function useRecommendedInvestors() : User[] {
                             ...investor
                         } as User);
                     }
-                })
+                });
                 setRecommendedInvestors(arr);
             });
         }
     }, [user]);
-
     return recommendedInvestors;
 }
 
