@@ -46,6 +46,7 @@ export default function SignupInformation(){
             bio,
             profilePhoto: avatar,
             email: authContext.user?.email ?? '',
+            isInvestor: false,
         }, { merge: true}).then(() => history.push('/dashboard'));
     }
 
