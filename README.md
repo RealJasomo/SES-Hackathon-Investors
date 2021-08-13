@@ -37,7 +37,7 @@ Sometimes the only thing preventing a million-dollar idea from coming to life is
 - Click this [link](https://launchpad-sage.vercel.app)  
  **or...**  
 1. Clone repository
-2. Navigate to "frontend" subfolder
+2. Navigate to ["frontend"](https://github.com/RealJasomo/SES-Hackathon-Investors/tree/master/frontend) subfolder
 3. Install npm
 4. Run `npm i` command
 5. Run `npm start` command
