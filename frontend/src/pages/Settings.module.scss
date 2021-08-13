@@ -1,6 +1,9 @@
 $primary: #0B4578;
 .signupInformationContainer {
   padding: 3rem;
+  margin: 0 auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   .optionalAboutInformation {
     display: grid;
     grid-template-columns: 1fr 1fr;
