@@ -157,18 +157,12 @@ function StartupSearchPage() {
         let co = e.target.value;
         if (co === "-") { 
             setCountry(emptyCountry);
-            setTerritory(emptyTerritory); // reset the territory to avoid errors
+  
         }
         else {
-            setCountry(JSON.parse(co));
-            let terr = countryContains(JSON.parse(co), defaultTerritory) // check if country contains default territory
-            if (terr !== null) {
-                setTerritory(terr);
-            }
-            else {
-                setTerritory(emptyTerritory); // reset the territory to avoid errors
-            }
+            setCountry(JSON.parse(co));         
         }
+        setTerritory(emptyTerritory); // reset the territory to avoid errors
         handleRecommended();
     }
 
@@ -234,6 +228,7 @@ function StartupSearchPage() {
                                             <option value={"-"}>{"-"}</option>
                                             <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option> 
                                             <hr></hr>
+                                            {territory !== emptyTerritory ? <option key={index} value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
                                         </>
                                     )
                                 }
@@ -266,7 +261,7 @@ function StartupSearchPage() {
                             if (index > 0) {
                                 return (
                                     <div>
-                                        <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "% — " + ((breakpoint * 100) - 1) + "%"}</label>
+                                        <label><input key={index} type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "% — " + ((breakpoint * 100) - 1) + "%"}</label>
                                     </div>
                                 )
                             }
@@ -294,10 +289,10 @@ function StartupSearchPage() {
                 :    
                 <div>
                 <h2>Startups: </h2>
-                    {startups.map((startup) => {
+                    {startups.map((startup, index) => {
                         return (
                             <div>
-                                <StartupCard startup={startup as Startup}/> 
+                                <StartupCard key={index} startup={startup as Startup}/> 
                             </div>
                         )
                     })}

@@ -7,6 +7,7 @@ export default interface User {
     email: string,
     firstName: string,
     lastName: string,
+    isInvestor: boolean,
     profilePhoto?: string,
     state: string,
     tags?: string[],
