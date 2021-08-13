@@ -12,6 +12,7 @@ import styles from './Settings.module.scss';
 import User from '@interfaces/User';
 import { Box, CardHeader, Typography } from '@material-ui/core';
 import { Card, CardContent } from '@material-ui/core';
+import UserCard from '@components/UserCard';
 
 function Settings(){
     const user = useFirebaseUser();
@@ -25,7 +26,8 @@ function Settings(){
         avatarOpen: false,
         isInvestor: user?.isInvestor ?? false,
         id: user?.id ?? '',
-        email: user?.email ?? ''
+        email: user?.email ?? '',
+        tags: user?.tags ?? []
     } as User);
 
     useEffect(() => {
@@ -69,8 +71,11 @@ function Settings(){
     }
     
     return (
+
         <Card className={styles.signupInformationContainer}>
-        <CardHeader title="Profile"></CardHeader>
+                    <UserCard user={formData as User}/>
+
+        <CardHeader title="Edit Profile"></CardHeader>
         <CardContent>
             <form onSubmit={handleSubmit}>
                 <div className={styles.optionalAboutInformation}>
