@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import firebase, { useFirebaseUser } from '@fire';
+import firebase, { useFirebaseUser, useRecommendedStartups } from '@fire';
 import countriesList from '../res/countries.json';
 import StartupCard from '@components/StartupCard';
 import Startup from '@interfaces/Startup';
@@ -8,6 +8,7 @@ import Startup from '@interfaces/Startup';
 function StartupSearchPage() {
     const db = firebase.firestore(); // database
     const user = useFirebaseUser(); // custom hook to retrieve global user
+    const recommendedStartups = useRecommendedStartups(); 
     
     const [startups, setStartups] = useState<firebase.firestore.DocumentData[]>([]); // list of startups to display
     const [search, setSearch] = useState(""); // search query
@@ -20,7 +21,6 @@ function StartupSearchPage() {
     const [defaultTerritory, setDefaultTerritory] = useState(emptyTerritory) // default value
     const [territory, setTerritory] = useState(defaultTerritory); // state/territory location
 
-   
     // Helper function to find a territory within a country
     function countryContains(country, territory) {
         let result = null;
@@ -34,6 +34,17 @@ function StartupSearchPage() {
         }
         return result;
     }
+    
+  
+
+    const tagOptions = ["dog", "tail", "tech", "marketing"]; // tag options available
+    const [tags, setTags] = useState<String[]>([]); // tags query
+
+    const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
+    const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
+
+
+    const [showRecommended, setShowRecommeded] = useState(true); // initially, show the recommended list
 
     // useEffect hook that sets the default value of location based on the user's profile
     useEffect(() => {
@@ -42,29 +53,20 @@ function StartupSearchPage() {
                 if (co.code === user.country) {
                     if (co.states === null) {
                         let obj = {code: co.code, name: co.name, states: []}; // deal with weird type checks
-                        setCountry(obj);
                         setDefaultCountry(obj);
                     }
                     else {
-                        setCountry(co);
                         setDefaultCountry(co);
                         let terr = countryContains(co, {code: user.state, name: user.state})
                             if (terr !== null) {
-                                setTerritory(terr);
                                 setDefaultTerritory(terr);
                             }
                     }   
-                    return
+                    return;
                 }
             })
         }
-    }, [user])
-
-    const tagOptions = ["dog", "tail", "tech", "marketing"]; // tag options available
-    const [tags, setTags] = useState<String[]>([]); // tags query
-
-    const [goalPercent, setGoalPercent] = useState(-1.0); // default set to negative 1 to avoid confusion, percent progress towards a goal
-    const goalPercentBreakpoints = [0.0, 0.25, 0.5, 0.75, 1.0]; // breakpoints for the filters
+    }, [user]);
 
     // useEffect hook that runs when the component loads or when search, tags, or location fields are changed
     useEffect(() => {
@@ -125,6 +127,7 @@ function StartupSearchPage() {
             setSearch("");
         }
         //console.log(query);
+        handleRecommended();
     }
 
     // Handles selection of tags to include/declude from search
@@ -139,12 +142,14 @@ function StartupSearchPage() {
         }
         setTags(arr);
         //console.log(arr);
+        handleRecommended();
     }
 
     function handleGoalPercent(e) {
         let val = e.target.value;
         setGoalPercent(val);
         //console.log(val)
+        handleRecommended();
     }
 
     // Handles country selection
@@ -164,9 +169,10 @@ function StartupSearchPage() {
                 setTerritory(emptyTerritory); // reset the territory to avoid errors
             }
         }
-       
+        handleRecommended();
     }
 
+    // Handles territory/state selection
     function handleTerritories(e) {
         let te = e.target.value;
         if (te === "-") {
@@ -176,107 +182,127 @@ function StartupSearchPage() {
             setTerritory(JSON.parse(te));
             //console.log(JSON.parse(te));
         }
-        
+        handleRecommended();
     }
 
+    // Handles whether to show recommended or not
+    function handleRecommended() {
+        setShowRecommeded(false);
+    }
 
     return (
         <div>
             <h1>Search for Startups</h1>
-            <label>Search:
-                <input onChange={handleSearch}></input>
-            </label>
-            <div>
-                <h4>Tags:</h4>
-                {tagOptions.map((tag) => {
-                        return (
-                        <div>
-                            <label><input type="checkbox" id={tag} name={tag} onChange={handleTags}></input>{tag}</label>
-                        </div>
-                        )
-                    })
-                }
-                
-                <h4>Location: </h4>
-                <label>Country:
-                    <select onChange={handleCountry}>
-                        <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
-                        <option value={"-"}>{"-"}</option>
-                        <hr></hr>
-                        {countriesList.countries.map((country) => {
+           
+                <label>Search:
+                    <input onChange={handleSearch}></input>
+                </label>
+                <div>
+                    <h4>Tags:</h4>
+                    {tagOptions.map((tag) => {
                             return (
-                                <option value={JSON.stringify(country)}>{country.name}</option>
+                            <div>
+                                <label><input type="checkbox" id={tag} name={tag} onChange={handleTags}></input>{tag}</label>
+                            </div>
                             )
                         })
-                        }
-                    </select>
-                </label>
-               
+                    }
+                    
+                    <h4>Location: </h4>
+                    <label>Country:
+                        <select onChange={handleCountry}>
+                            <option value={"-"}>{"-"}</option>
+                            <option value={JSON.stringify(defaultCountry)}>{defaultCountry.name}</option>
+                            <hr></hr>
+                            {countriesList.countries.map((country) => {
+                                return (
+                                    <option value={JSON.stringify(country)}>{country.name}</option>
+                                )
+                            })
+                            }
+                        </select>
+                    </label>
                 
-                {country.states !== null && country.code !== "" ? <label>State/Territory:
-                    <select onChange={handleTerritories}>
-                        {country.states.map((territory, index) => {
-                            let terr = countryContains(country, defaultTerritory);
-                            if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
-                                return (
-                                    <>
-                                        <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option> 
-                                        <option value={"-"}>{"-"}</option>
-                                        <hr></hr>
-                                    </>
-                                )
-                            }
-                            else if (index === 0) { // otherwise place the "-" option
-                                return (
-                                    <>
-                                        <option value={"-"}>{"-"}</option>
-                                        <hr></hr>
-                                        {territory !== emptyTerritory ? <option value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
-                                    </>
-                                )
-                            }
-                            else { // all other cases place the current territory in the list
-                                return (
-                                    <option value={JSON.stringify(territory)}>{territory.name}</option>
-                                )
-                            }
-                        })}
-                    </select>
-                </label>
-                : <></>
-                }          
+                    
+                    {country.states !== null && country.code !== "" ? <label>State/Territory:
+                        <select onChange={handleTerritories}>
+                            {country.states.map((territory, index) => {
+                                let terr = countryContains(country, defaultTerritory);
+                                if (index === 0 && terr !== null) { // if the default territory is in the list, place it at the top
+                                    return (
+                                        <>
+                                            <option value={"-"}>{"-"}</option>
+                                            <option value={JSON.stringify(defaultTerritory)}>{defaultTerritory.name}</option> 
+                                            <hr></hr>
+                                        </>
+                                    )
+                                }
+                                else if (index === 0) { // otherwise place the "-" option
+                                    return (
+                                        <>
+                                            <option value={"-"}>{"-"}</option>
+                                            <hr></hr>
+                                            {territory !== emptyTerritory ? <option value={JSON.stringify(territory)}>{territory.name}</option> : <></>}
+                                        </>
+                                    )
+                                }
+                                else { // all other cases place the current territory in the list
+                                    return (
+                                        <option value={JSON.stringify(territory)}>{territory.name}</option>
+                                    )
+                                }
+                            })}
+                        </select>
+                    </label>
+                    : <></>
+                    }          
 
-                <div>
-                    <h4>% Goal Reached: </h4>
                     <div>
-                        <label><input type="radio" name={"% Goals Reached"} value={-1.0} onChange={handleGoalPercent} defaultChecked></input>{"Any"}</label>
-                    </div>
-                    {goalPercentBreakpoints.map((breakpoint, index) => {
-                        if (index > 0) {
-                            return (
-                                <div>
-                                    <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "% — " + ((breakpoint * 100) - 1) + "%"}</label>
-                                </div>
-                            )
+                        <h4>% Goal Reached: </h4>
+                        <div>
+                            <label><input type="radio" name={"% Goals Reached"} value={-1.0} onChange={handleGoalPercent} defaultChecked></input>{"Any"}</label>
+                        </div>
+                        {goalPercentBreakpoints.map((breakpoint, index) => {
+                            if (index > 0) {
+                                return (
+                                    <div>
+                                        <label><input type="radio" name={"% Goals Reached"} value={breakpoint - 0.01} onChange={handleGoalPercent}></input>{(goalPercentBreakpoints[index-1] * 100) + "% — " + ((breakpoint * 100) - 1) + "%"}</label>
+                                    </div>
+                                )
+                            }
+                            return <></>
+                        })
                         }
-                        return <></>
+                    </div>
+                </div>
+          
+            <hr></hr>
+
+            {showRecommended ? 
+                <div>
+                    <h2>Recommended Startups: </h2>    
+                    {recommendedStartups.map((startup, index) => {
+                        return (
+                            <div>
+                                <StartupCard key={index} startup={startup as Startup}/>
+                            </div>
+                        )
                     })
+
                     }
                 </div>
-            </div>
-
-            <hr></hr>
-            <div>
+                :    
+                <div>
                 <h2>Startups: </h2>
-                {startups.map((startup) => {
-                    return (
-                        <div>
-                            <StartupCard startup={startup as Startup}/> 
-                            
-                        </div>
-                    )
-                })}
-            </div>
+                    {startups.map((startup) => {
+                        return (
+                            <div>
+                                <StartupCard startup={startup as Startup}/> 
+                            </div>
+                        )
+                    })}
+                </div>
+            }       
           
         </div>
     )

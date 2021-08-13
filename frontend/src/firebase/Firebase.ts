@@ -96,6 +96,108 @@ export function useStartups(): Startup[]{
     return startups;
 }
 
+export function useRecommendedStartups() : Startup[] {
+    const user = useFirebaseUser();
+    const [recommendedStartups, setRecommendedStartups] = useState<Startup[]>([])
+    const db = firebase.firestore();
+    
+    // logic to select default recommendations
+
+    function containsTags(tags, target) {
+        if (tags !== undefined && tags !== null) {
+            tags.forEach(tag => {
+                if (tag.toLowerCase.includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
+
+    useEffect(() => {
+        let arr: Startup[] = [];
+        if (user) {
+            db.collection("startups").limit(100).onSnapshot(snapshot => {
+                snapshot.forEach(doc => {
+                    let startup = doc.data();
+                    let validate = false;
+
+                    // add them if any tags match
+                    if (user.tags !== null && user.tags !== undefined && startup.tags !== undefined) {
+                        startup.tags.forEach(tag => {
+                            validate = validate || containsTags(user.tags, tag);
+                        });
+                    }
+
+                    // Match user's tags to startup name
+                    validate = validate || (user.tags !== undefined && containsTags(user.tags, startup.name));
+
+                    // Match user's location 
+                    validate = validate || (user.country === startup.country);
+                    validate = validate || (user.state === startup.state);
+
+                    if (validate) {
+                        arr.push(startup as Startup);
+                    }
+                })
+                setRecommendedStartups(arr);
+            });
+        }
+    }, [user]);
+
+    return recommendedStartups;
+}
+
+
+export function useRecommendedInvestors() : User[] {
+    const user = useFirebaseUser();
+    const [recommendedInvestors, setRecommendedInvestors] = useState<User[]>([])
+    const db = firebase.firestore();
+    
+    // logic to select default recommendations
+
+    function containsTags(tags, target) {
+        if (tags !== undefined && tags !== null) {
+            tags.forEach(tag => {
+                if (tag.toLowerCase.includes(target.toLowerCase()) || target.toLowerCase().includes(tag.toLowerCase())) {
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
+
+    useEffect(() => {
+        let arr: User[] = [];
+        if (user) {
+            db.collection("startups").limit(100).onSnapshot(snapshot => {
+                snapshot.forEach(doc => {
+                    let investor = doc.data();
+                    let validate = false;
+                    let isInvestor = true;
+                    // add them if any tags match
+                    if (user.tags !== null && user.tags !== undefined && investor.tags !== undefined) {
+                        investor.tags.forEach(tag => {
+                            validate = validate || containsTags(user.tags, tag);
+                        });
+                    }
+
+                    // Match user and investor locations
+                    validate = validate || (user.country === investor.country);
+                    validate = validate || (user.state === investor.state);
+
+                    if (validate && isInvestor) {
+                        arr.push(investor as User);
+                    }
+                })
+                setRecommendedInvestors(arr);
+            });
+        }
+    }, [user]);
+
+    return recommendedInvestors;
+}
+
 export function useInvestInStartup(value: number, id: string, increaseMode: boolean): () => Promise<boolean>{
     const user = useFirebaseUser();
 
